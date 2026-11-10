@@ -39,7 +39,7 @@ LABEL org.opencontainers.image.title="ponnokhoj" \
       org.opencontainers.image.revision="${COMMIT}" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.created="${DATE}" \
-      org.opencontainers.image.licenses="NOASSERTION"
+      org.opencontainers.image.licenses="MIT"
 COPY --from=build /out/ponnokhoj /ponnokhoj
 # 65532 is distroless's "nonroot" user and group.
 USER 65532:65532

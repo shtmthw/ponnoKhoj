@@ -108,6 +108,7 @@ fuzz: ## Run every fuzz target for FUZZTIME (default 30s) on top of its seed cor
 	go test -run='^$$' -fuzz='^FuzzNormalize$$' -fuzztime=$(FUZZTIME) ./internal/search
 	go test -run='^$$' -fuzz='^FuzzParsePrice$$' -fuzztime=$(FUZZTIME) ./internal/sources
 	go test -run='^$$' -fuzz='^FuzzParseStructuredData$$' -fuzztime=$(FUZZTIME) ./internal/sources
+	go test -run='^$$' -fuzz='^FuzzParseProductPage$$' -fuzztime=$(FUZZTIME) ./internal/sources
 	go test -run='^$$' -fuzz='^FuzzParseListingCSV$$' -fuzztime=$(FUZZTIME) ./internal/vendor
 
 .PHONY: test-integration
@@ -154,7 +155,8 @@ image-multiarch: ## Build linux/amd64 and linux/arm64 (no push)
 
 .PHONY: image-check
 image-check: image ## Image gates: runs `version`, size budget, Trivy (fixable HIGH/CRITICAL)
-	docker run --rm $(IMAGE) version | tee /dev/stderr | grep -q "commit $(COMMIT)"
+	@out="$$(docker run --rm $(IMAGE) version)"; echo "$$out"; \
+	  case "$$out" in *"commit $(COMMIT)"*) ;; *) echo "image does not report commit $(COMMIT)"; exit 1;; esac
 	@size=$$(docker buildx build -q $(BUILDX_FLAGS) $(DOCKER_BUILD_ARGS) --output type=tar,dest=- . | wc -c); \
 	  echo "image filesystem: $$size bytes (budget $(IMAGE_SIZE_BUDGET))"; \
 	  [ "$$size" -le $(IMAGE_SIZE_BUDGET) ] || { echo "image exceeds the size budget"; exit 1; }

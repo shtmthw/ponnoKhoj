@@ -3,7 +3,7 @@
 [![CI](https://github.com/shtmthw/ponnoKhoj/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shtmthw/ponnoKhoj/actions/workflows/ci.yml)
 [![Go version](https://img.shields.io/github/go-mod/go-version/shtmthw/ponnoKhoj)](go.mod)
 [![Docker Hub](https://img.shields.io/docker/v/matthew552/ponnokhoj?label=docker%20hub)](https://hub.docker.com/r/matthew552/ponnokhoj)
-<!-- License badge: add once the owner chooses a license (docs/PROGRESS.md, "Needs from owner"). -->
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > ## 🤖 Fully Agent-Driven Project
 >
@@ -205,3 +205,7 @@ after 30 days, so keep them fresh. Unusual prices (more than 3× or under ⅓ of
   the Open Database License. The tile server is configurable (`MAP_TILE_URL`); heavy use should follow the
   [OSM tile usage policy](https://operations.osmfoundation.org/policies/tiles/) or use another provider.
 - **Privacy.** Shopper locations are never stored or logged exactly — only a ~1 km area, for aggregate statistics and estimate caching.
+
+## License
+
+[MIT](LICENSE) © Matt ([@shtmthw](https://github.com/shtmthw)). Third-party components keep their own licenses: HTMX and Leaflet (`internal/web/static/vendor/*/LICENSE`), the area dataset (`internal/seed/data/LICENSE.bangladesh-geocode`), and map data © OpenStreetMap contributors (ODbL).

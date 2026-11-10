@@ -14,7 +14,7 @@ Work is pushed to branch `development`. No image is on Docker Hub yet: the targe
 | M3 Online sources | Done | Polite fetcher (robots, 5 s/host, retry, breaker), JSON-LD + microdata parsing, matching with variant checks, River refresh jobs, stale-while-revalidate. Star Tech and Tech Land are live on kind; reviews are in [sources.md](sources.md). |
 | M4 AI estimation | Done | Evidence → sufficiency → baseline → LLM agent with read-only tools → validation → fallback; cache; async jobs; eval harness. Baseline: MAPE 5.29%, coverage 85.8% ([estimation.md](estimation.md)). |
 | M5 Web UI | Done | All pages, bilingual (bn default, en), HTMX estimate polling, Leaflet maps, works without JS for core search; golden tests in both languages. |
-| M6 Production hardening | Mostly done | Prod overlay (HPA, PDB, NetworkPolicies, Gateway API + cert-manager, CNPG ×3 with Barman Cloud backups, External Secrets); metrics; tracing; runbook; load and rolling-restart results. Missing: Grafana dashboards as JSON. |
+| M6 Production hardening | Done | Prod overlay (HPA, PDB, NetworkPolicies, Gateway API + cert-manager, CNPG ×3 with Barman Cloud backups, External Secrets); metrics; tracing; runbook; load and rolling-restart results. Grafana dashboards dropped by the owner. |
 | M7 Release v0.1.0 | Not started | README and SECURITY.md are done. Tagging, publishing and cosign verification need the owner's Docker Hub setup. |
 
 ## Evidence (local runs, 2026-11-10)
@@ -40,7 +40,6 @@ Work is pushed to branch `development`. No image is on Docker Hub yet: the targe
 - **Publishing is skipped** until the owner sets `DOCKERHUB_USERNAME` (repository variable) and `DOCKERHUB_TOKEN` (secret). The optional real-cluster deploy job from §11.3 is not implemented (off by default anyway).
 - **e2e in CI uses statistical estimates.** The offline `ci` overlay has no LLM, and the LLM path is covered by recorded-response unit tests instead ([ADR 0016](adr/0016-offline-ci-overlay.md)). This deviates from §11.2; owner to accept or reject.
 - **No LLM backtest numbers.** Free-tier rate limits make a full run impractical. One manual run is recorded.
-- **Grafana dashboards** are not in the repo yet (§M6).
 - **Areas:** no metropolitan thanas and no upazila coordinates in the open dataset ([data-sources.md](data-sources.md)).
 - **Online coverage:** 20 curated electronics products from two shops. No compliant grocery source yet. Ultra Technology is pending review.
 - **Rate limits are per pod** (in memory). With N web replicas the effective limit is up to N× ([ADR 0007](adr/0007-in-memory-rate-limits.md)). On kind every client shares one Docker IP, so the dev overlay raises the search limit.
@@ -50,13 +49,12 @@ Work is pushed to branch `development`. No image is on Docker Hub yet: the targe
 
 1. Review the `development` branch and open a PR to `main`.
 2. Docker Hub: set the repository variable `DOCKERHUB_USERNAME=matthew552` and store a personal access token as the `DOCKERHUB_TOKEN` secret, so CI publishes signed images.
-3. License for the project (README badge and image label are placeholders).
-4. Security contact for SECURITY.md (GitHub private reporting is the current default).
-5. Production: domain, cluster and kubectl context, object-storage bucket and credentials for backups, secret manager for External Secrets.
-6. Decide on Ultra Technology (pending review), and whether to accept ADR 0016.
+3. Security contact for SECURITY.md (GitHub private reporting is the current default).
+4. Production: domain, cluster and kubectl context, object-storage bucket and credentials for backups, secret manager for External Secrets.
+5. Decide on Ultra Technology (pending review), and whether to accept ADR 0016.
 
 ## Next
 
 1. Push to a branch, open a PR, and fix whatever the first GitHub Actions run finds.
 2. Configure Docker Hub, merge, and verify the signed multi-arch `sha-…` image (completes M0 acceptance).
-3. Grafana dashboards as JSON, then tag `v0.1.0`.
+3. Tag `v0.1.0`.
