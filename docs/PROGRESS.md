@@ -2,7 +2,7 @@
 
 Last updated: 2026-11-10. The milestones are from [agentPlan.md](../agentPlan.md) §14. Decisions are recorded in [adr/](adr/README.md).
 
-Work is pushed to branch `development`. No image is on Docker Hub yet: the target is `docker.io/matthew552/ponnokhoj`, published by CI once the variable and secret below are set (or pushed by hand by the owner). The GitHub Actions pipeline runs on PRs and on `main`; until a PR is opened, its gates have only been run locally through the same Makefile targets.
+Work is pushed to branch `development`. A hand-built multi-arch image (amd64, arm64; SBOM and provenance) is on Docker Hub: `docker.io/matthew552/ponnokhoj:sha-c6ed479` / `:development`, digest `sha256:58dcb89a5f130438f342d94bf5012fe800115a3127f34547d366c5c9963b1bf7`. It is not cosign-signed; signed images come from CI once the variable and secret below are set. The GitHub Actions pipeline runs on PRs and on `main`; until a PR is opened, its gates have only been run locally through the same Makefile targets.
 
 ## Milestones
 
