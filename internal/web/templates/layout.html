@@ -1,0 +1,49 @@
+{{define "layout"}}<!doctype html>
+<html lang="{{.L.Lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="{{.L.T "site.description"}}">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>{{.Title}} · {{.L.T "site.name"}}</title>
+<link rel="icon" type="image/svg+xml" href="{{.Assets.Path "favicon.svg"}}">
+<link rel="stylesheet" href="{{.Assets.Path "vendor/leaflet/leaflet.css"}}">
+<link rel="stylesheet" href="{{.Assets.Path "app.css"}}">
+<script src="{{.Assets.Path "vendor/htmx/htmx.min.js"}}" defer></script>
+<script src="{{.Assets.Path "vendor/leaflet/leaflet.js"}}" defer></script>
+<script src="{{.Assets.Path "app.js"}}" defer></script>
+</head>
+<body data-map-tiles="{{.TileURL}}" data-tile-attribution="{{.TileAttribution}}">
+<a class="skip" href="#main">{{.L.T "nav.skip"}}</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="{{.L.T "site.name"}}"><span class="logo-mark" aria-hidden="true">৳</span>{{.L.T "site.name"}}</a>
+    <nav class="site-nav" aria-label="{{.L.T "nav.label"}}">
+      <a href="/">{{.L.T "nav.search"}}</a>
+      {{if .User}}
+        <a href="/vendor">{{.L.T "nav.dashboard"}}</a>
+        {{if .User.IsAdmin}}<a href="/admin">{{.L.T "nav.admin"}}</a>{{end}}
+        <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">{{.L.T "nav.logout"}}</button></form>
+      {{else}}
+        <a href="/vendor/login">{{.L.T "nav.vendors"}}</a>
+      {{end}}
+      <a class="lang" href="/lang?set={{.L.Other}}&amp;next={{.Path}}" hreflang="{{.L.Other}}" lang="{{.L.Other}}">{{.L.T "nav.other_language"}}</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  {{if .Flash}}<div class="wrap"><div class="flash {{.FlashKind}}" role="status">{{.Flash}}</div></div>{{end}}
+  {{template "content" .}}
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>{{.L.T "footer.agent"}}</p>
+    <p>{{.L.T "footer.online"}}</p>
+    <p>{{.L.T "footer.map"}} {{.TileAttribution}}</p>
+    {{if .DemoMode}}<p>{{.L.T "footer.demo"}}</p>{{end}}
+  </div>
+</footer>
+</body>
+</html>{{end}}

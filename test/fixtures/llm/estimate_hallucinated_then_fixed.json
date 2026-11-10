@@ -1,0 +1,5 @@
+[
+  {"tool_calls": [{"id": "call_1", "name": "get_local_listings", "arguments": {}}], "prompt_tokens": 400, "completion_tokens": 20},
+  {"content": "Here is my answer:\n```json\n{\"low\": 39000, \"point\": 40500, \"high\": 43000, \"confidence\": \"medium\", \"evidence_ids\": [\"L1\", \"L999\"], \"explanation_bn\": \"ব্যাখ্যা\", \"explanation_en\": \"Cites a listing that was never retrieved.\"}\n```", "prompt_tokens": 700, "completion_tokens": 90},
+  {"content": "{\"low\": 39000, \"point\": 40500, \"high\": 43000, \"confidence\": \"medium\", \"evidence_ids\": [\"L1\", \"L2\"], \"explanation_bn\": \"সংশোধিত ব্যাখ্যা\", \"explanation_en\": \"Corrected to cite only retrieved listings.\"}", "prompt_tokens": 820, "completion_tokens": 80}
+]

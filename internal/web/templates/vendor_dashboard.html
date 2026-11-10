@@ -1,0 +1,31 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<div class="page-head">
+  <div><h1>{{$L.T "vendor.dashboard"}}</h1><p class="muted small">{{$L.T "vendor.signed_in_as" .User.Email}}</p></div>
+  <div class="actions">
+    <a class="btn" href="/vendor/shops/new">{{$L.T "vendor.add_shop"}}</a>
+    <a class="btn" href="/vendor/products/new">{{$L.T "vendor.propose_product"}}</a>
+    <a class="btn" href="/vendor/catalog.csv">{{$L.T "vendor.download_catalog"}}</a>
+  </div>
+</div>
+<section class="card" aria-labelledby="shops-h">
+  <h2 id="shops-h">{{$L.T "vendor.your_shops"}}</h2>
+  {{if $d.Shops}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "table.shop"}}</th><th scope="col">{{$L.T "table.status"}}</th><th scope="col" class="num">{{$L.T "table.listings"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Shops}}
+      <tr>
+        <td><strong>{{.Name}}</strong><br><span class="small muted">{{.Address}} · {{$L.Name .AreaEn .AreaBn}}</span></td>
+        <td><span class="badge {{.Status}}">{{$L.T (printf "status.%s" .Status)}}</span>{{if .AutoHidden}} <span class="badge hidden">{{$L.T "status.auto_hidden"}}</span>{{end}}</td>
+        <td class="num">{{$L.Num .ListingCount}}</td>
+        <td><a class="btn small" href="/vendor/shops/{{.ID}}">{{$L.T "vendor.manage"}}</a></td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p>{{$L.T "vendor.no_shops"}}</p>{{end}}
+</section>
+</div>
+{{end}}

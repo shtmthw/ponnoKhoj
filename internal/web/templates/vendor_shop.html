@@ -1,0 +1,105 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<h1>{{$d.Shop.Name}}</h1>
+<p><span class="badge {{$d.Shop.Status}}">{{$L.T (printf "status.%s" $d.Shop.Status)}}</span>
+  {{if eq $d.Shop.Status "pending"}}<span class="muted">{{$L.T "vendor.pending_note"}}</span>{{end}}</p>
+<div class="actions card">
+  <a class="btn secondary" href="/vendor/shops/{{$d.Shop.ID}}/edit">{{$L.T "vendor.edit_shop"}}</a>
+  <a class="btn secondary" href="/shops/{{$d.Shop.ID}}">{{$L.T "vendor.public_page"}}</a>
+  <a href="/vendor">{{$L.T "vendor.back"}}</a>
+</div>
+
+{{if $d.Bulk}}
+<section class="card" aria-labelledby="bulk-result-h">
+  <h2 id="bulk-result-h">{{$L.T "bulk.result"}}</h2>
+  {{if $d.Bulk.Fatal}}<p class="error-text" role="alert">{{$d.Bulk.Fatal}}</p>{{else}}
+  <p>{{$L.T "bulk.applied" ($L.Num $d.Bulk.Applied)}}{{if $d.Bulk.Flagged}} {{$L.T "bulk.flagged" ($L.Num $d.Bulk.Flagged)}}{{end}}</p>{{end}}
+  {{if $d.Bulk.Errors}}
+  <table>
+    <thead><tr><th scope="col">{{$L.T "bulk.line"}}</th><th scope="col">{{$L.T "bulk.problem"}}</th><th scope="col">{{$L.T "bulk.value"}}</th></tr></thead>
+    <tbody>{{range $d.Bulk.Errors}}<tr><td>{{$L.Num .Line}}</td><td>{{$L.T (printf "bulk.error.%s" .Code)}}</td><td>{{.Detail}}</td></tr>{{end}}</tbody>
+  </table>
+  {{end}}
+</section>
+{{end}}
+
+<section class="card stack" aria-labelledby="add-h">
+  <h2 id="add-h">{{$L.T "listing.add"}}</h2>
+  <form method="get" action="/vendor/shops/{{$d.Shop.ID}}" class="stack">
+    <label for="pq">{{$L.T "listing.find_product"}}</label>
+    <input id="pq" type="search" name="pq" value="{{$d.ProductQuery}}" maxlength="200" autocomplete="off"
+      hx-get="/vendor/shops/{{$d.Shop.ID}}/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+    <div><button class="btn secondary small" type="submit">{{$L.T "search.submit"}}</button></div>
+  </form>
+  {{template "product_options" .}}
+  <p class="small">{{$L.T "listing.missing"}} <a href="/vendor/products/new?shop={{$d.Shop.ID}}">{{$L.T "vendor.propose_product"}}</a></p>
+</section>
+
+<section class="card" aria-labelledby="listings-h">
+  <h2 id="listings-h">{{$L.T "listing.yours"}}</h2>
+  {{if $d.Listings}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col">{{$L.T "table.price"}}</th><th scope="col">{{$L.T "table.updated"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Listings}}
+      <tr>
+        <td>{{$L.Name .NameEn .NameBn}} <span class="small muted">#{{.ProductID}}</span>
+          {{if eq .ProductStatus "proposed"}}<span class="badge pending">{{$L.T "status.proposed"}}</span>{{end}}
+          {{if .UnderReview}}<span class="badge review">{{$L.T "badge.under_review"}}</span>{{end}}
+          {{if .AutoHidden}}<span class="badge hidden">{{$L.T "status.auto_hidden"}}</span>{{end}}</td>
+        <td>
+          <form class="actions" method="post" action="/vendor/shops/{{$d.Shop.ID}}/listings">
+            <input type="hidden" name="product" value="{{.ProductID}}">
+            <label class="sr-only" for="price-{{.ID}}">{{$L.T "table.price"}}</label>
+            <input id="price-{{.ID}}" type="text" inputmode="decimal" name="price" value="{{.Price.Decimal}}" required class="narrow">
+            <label class="small"><input type="checkbox" name="in_stock" value="1"{{if .InStock}} checked{{end}}> {{$L.T "listing.in_stock"}}</label>
+            <button class="btn small" type="submit">{{$L.T "form.save"}}</button>
+          </form>
+        </td>
+        <td>{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
+        <td><form method="post" action="/vendor/listings/{{.ID}}/delete"><input type="hidden" name="shop" value="{{$d.Shop.ID}}"><button class="btn danger small" type="submit">{{$L.T "form.delete"}}</button></form></td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p>{{$L.T "listing.none"}}</p>{{end}}
+</section>
+
+<section class="card stack" aria-labelledby="bulk-h">
+  <h2 id="bulk-h">{{$L.T "bulk.title"}}</h2>
+  <p>{{$L.T "bulk.help" ($L.Num $d.CSVMaxRows)}}</p>
+  <pre class="small">product_id,price,in_stock
+1,405,yes
+9,178.50,no</pre>
+  <form method="post" action="/vendor/shops/{{$d.Shop.ID}}/bulk" enctype="multipart/form-data" class="stack">
+    <div><label for="csv">{{$L.T "bulk.file"}}</label><input id="csv" type="file" name="csv" accept=".csv,text/csv" required></div>
+    <div><button class="btn" type="submit">{{$L.T "bulk.upload"}}</button></div>
+  </form>
+</section>
+</div>
+{{end}}
+
+{{define "product_options"}}
+{{$L := .L}}{{$d := .Data}}
+<div id="product-options" aria-live="polite">
+  {{if $d.ProductQuery}}
+    {{if $d.Products}}
+    <ul class="results">
+    {{range $d.Products}}
+      <li>
+        <div>{{$L.Name .NameEn .NameBn}} <span class="small muted">#{{.ID}}</span></div>
+        <form class="actions" method="post" action="/vendor/shops/{{$d.Shop.ID}}/listings">
+          <input type="hidden" name="product" value="{{.ID}}">
+          <label class="sr-only" for="new-price-{{.ID}}">{{$L.T "table.price"}}</label>
+          <input id="new-price-{{.ID}}" type="text" inputmode="decimal" name="price" placeholder="{{$L.T "listing.price_placeholder"}}" required class="narrow">
+          <input type="hidden" name="in_stock" value="1">
+          <button class="btn small" type="submit">{{$L.T "listing.set_price"}}</button>
+        </form>
+      </li>
+    {{end}}
+    </ul>
+    {{else}}<p>{{$L.T "listing.no_match"}}</p>{{end}}
+  {{end}}
+</div>
+{{end}}

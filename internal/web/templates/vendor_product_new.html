@@ -1,0 +1,28 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<h1>{{.Title}}</h1>
+<p class="muted">{{$L.T "propose.intro"}}</p>
+<form class="card stack" method="post" action="/vendor/products/new">
+  {{if $d.Error}}<p class="error-text" role="alert">{{$d.Error}}</p>{{end}}
+  <input type="hidden" name="shop" value="{{$d.ShopID}}">
+  <div class="grid two">
+    <div><label for="name_en">{{$L.T "propose.name_en"}}</label><input id="name_en" type="text" name="name_en" value="{{$d.NameEn}}" maxlength="150"></div>
+    <div><label for="name_bn">{{$L.T "propose.name_bn"}}</label><input id="name_bn" type="text" name="name_bn" value="{{$d.NameBn}}" maxlength="150" lang="bn"></div>
+  </div>
+  <div class="grid two">
+    <div><label for="brand">{{$L.T "propose.brand"}} <span class="hint">{{$L.T "form.optional"}}</span></label><input id="brand" type="text" name="brand" value="{{$d.Brand}}" maxlength="80"></div>
+    <div><label for="model">{{$L.T "propose.model"}} <span class="hint">{{$L.T "form.optional"}}</span></label><input id="model" type="text" name="model" value="{{$d.Model}}" maxlength="80"></div>
+  </div>
+  <div class="grid two">
+    <div><label for="category">{{$L.T "search.category"}}</label>
+      <select id="category" name="category" required>
+        <option value="">{{$L.T "shopform.area_choose"}}</option>
+        {{range $d.Categories}}<option value="{{.ID}}"{{if eq .ID $d.CategoryID}} selected{{end}}>{{$L.Name .NameEn .NameBn}}</option>{{end}}
+      </select></div>
+    <div><label for="size">{{$L.T "propose.size"}} <span class="hint">{{$L.T "propose.size_hint"}}</span></label><input id="size" type="text" name="size" value="{{$d.Size}}" maxlength="30" required></div>
+  </div>
+  <div class="actions"><button class="btn" type="submit">{{$L.T "propose.submit"}}</button> <a href="/vendor">{{$L.T "form.cancel"}}</a></div>
+</form>
+</div>
+{{end}}

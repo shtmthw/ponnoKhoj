@@ -1,0 +1,127 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<div class="page-head"><h1>{{$L.T "admin.title"}}</h1></div>
+<div class="stat-row">
+  <div class="stat"><b>{{$L.Num (len $d.PendingShops)}}</b><span>{{$L.T "admin.pending_shops"}}</span></div>
+  <div class="stat"><b>{{$L.Num (len $d.Reports)}}</b><span>{{$L.T "admin.reports"}}</span></div>
+  <div class="stat"><b>{{$L.Num (len $d.Proposals)}}</b><span>{{$L.T "admin.proposals"}}</span></div>
+  <div class="stat"><b>{{$L.Num (len $d.Flagged)}}</b><span>{{$L.T "admin.anomalies"}}</span></div>
+</div>
+
+<section class="card" aria-labelledby="pending-h">
+  <h2 id="pending-h">{{$L.T "admin.pending_shops"}} ({{$L.Num (len $d.PendingShops)}})</h2>
+  {{if $d.PendingShops}}
+  <div class="table-scroll"><table class="cards">
+    <thead><tr><th scope="col">{{$L.T "table.shop"}}</th><th scope="col">{{$L.T "admin.owner"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.PendingShops}}
+      <tr>
+        <td data-label="{{$L.T "table.shop"}}"><a href="/shops/{{.ID}}"><strong>{{.Name}}</strong></a>
+          <div class="description">{{if .Description}}{{.Description}}{{else}}<span class="muted">{{$L.T "admin.no_description"}}</span>{{end}}</div>
+          <span class="small muted">{{.Address}} · {{$L.Name .AreaEn .AreaBn}}{{if .ParentAreaEn}}, {{$L.Name .ParentAreaEn .ParentAreaBn}}{{end}}{{if .Phone}} · {{.Phone}}{{end}}{{if .OpeningHours}} · {{.OpeningHours}}{{end}}</span><br>
+          <span class="tiny muted">{{$L.T "admin.submitted"}} {{$L.Ago .CreatedAt}} · <a href="https://www.openstreetmap.org/?mlat={{.Lat}}&amp;mlon={{.Lng}}#map=17/{{.Lat}}/{{.Lng}}" rel="noopener noreferrer" target="_blank">{{$L.T "admin.see_pin"}}</a></span></td>
+        <td data-label="{{$L.T "admin.owner"}}">{{.OwnerName}}<br><span class="small muted">{{.OwnerEmail}}</span></td>
+        <td class="actions">
+          <form method="post" action="/admin/shops/{{.ID}}/status"><input type="hidden" name="status" value="verified"><button class="btn small" type="submit">{{$L.T "admin.verify"}}</button></form>
+          <form method="post" action="/admin/shops/{{.ID}}/status"><input type="hidden" name="status" value="suspended"><button class="btn danger small" type="submit">{{$L.T "admin.suspend"}}</button></form>
+        </td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p class="muted">{{$L.T "admin.empty"}}</p>{{end}}
+</section>
+
+<section class="card" aria-labelledby="reports-h">
+  <h2 id="reports-h">{{$L.T "admin.reports"}} ({{$L.Num (len $d.Reports)}})</h2>
+  {{if $d.Reports}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "admin.target"}}</th><th scope="col">{{$L.T "report.reason"}}</th><th scope="col">{{$L.T "report.note"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Reports}}
+      <tr>
+        <td><a href="/shops/{{.ShopID}}">{{.ShopName}}</a>{{if .ProductEn}}<br><span class="small">{{.ProductEn}} — {{$L.Money .Price}}</span>{{end}}</td>
+        <td>{{$L.T (printf "report.reason.%s" .Reason)}}</td>
+        <td>{{.Note}}</td>
+        <td class="actions">
+          <form method="post" action="/admin/reports/resolve"><input type="hidden" name="target" value="{{.Target}}"><input type="hidden" name="id" value="{{.TargetID}}"><input type="hidden" name="uphold" value="1"><button class="btn danger small" type="submit">{{$L.T "admin.uphold"}}</button></form>
+          <form method="post" action="/admin/reports/resolve"><input type="hidden" name="target" value="{{.Target}}"><input type="hidden" name="id" value="{{.TargetID}}"><input type="hidden" name="uphold" value="0"><button class="btn secondary small" type="submit">{{$L.T "admin.dismiss"}}</button></form>
+        </td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p class="muted">{{$L.T "admin.empty"}}</p>{{end}}
+</section>
+
+<section class="card" aria-labelledby="proposals-h">
+  <h2 id="proposals-h">{{$L.T "admin.proposals"}} ({{$L.Num (len $d.Proposals)}})</h2>
+  {{if $d.Proposals}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col">{{$L.T "search.category"}}</th><th scope="col">{{$L.T "admin.owner"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Proposals}}
+      <tr>
+        <td><strong>{{.NameEn}}</strong> / <span lang="bn">{{.NameBn}}</span><br><span class="small muted">{{.Brand}} {{.Model}} · {{$L.Qty .Quantity}}</span></td>
+        <td>{{.CategoryEn}}</td><td>{{.ProposerEmail}}</td>
+        <td class="actions">
+          <form method="post" action="/admin/products/{{.ID}}/review"><input type="hidden" name="approve" value="1"><button class="btn small" type="submit">{{$L.T "admin.approve"}}</button></form>
+          <form method="post" action="/admin/products/{{.ID}}/review"><input type="hidden" name="approve" value="0"><button class="btn danger small" type="submit">{{$L.T "admin.reject"}}</button></form>
+        </td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p class="muted">{{$L.T "admin.empty"}}</p>{{end}}
+</section>
+
+<section class="card" aria-labelledby="anomalies-h">
+  <h2 id="anomalies-h">{{$L.T "admin.anomalies"}} ({{$L.Num (len $d.Flagged)}})</h2>
+  <p class="small muted">{{$L.T "admin.anomalies_hint"}}</p>
+  {{if $d.Flagged}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col">{{$L.T "table.shop"}}</th><th scope="col" class="num">{{$L.T "table.price"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Flagged}}
+      <tr>
+        <td><a href="/search?product={{.ProductID}}&amp;mode=all">{{$L.Name .NameEn .NameBn}}</a></td>
+        <td><a href="/shops/{{.ShopID}}">{{.ShopName}}</a></td>
+        <td class="num">{{$L.Money .Price}}</td>
+        <td class="actions">
+          <form method="post" action="/admin/listings/{{.ID}}/anomaly"><input type="hidden" name="hide" value="0"><button class="btn small" type="submit">{{$L.T "admin.price_ok"}}</button></form>
+          <form method="post" action="/admin/listings/{{.ID}}/anomaly"><input type="hidden" name="hide" value="1"><button class="btn danger small" type="submit">{{$L.T "admin.price_wrong"}}</button></form>
+        </td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p class="muted">{{$L.T "admin.empty"}}</p>{{end}}
+</section>
+
+<section class="card" aria-labelledby="sources-h">
+  <h2 id="sources-h">{{$L.T "admin.sources"}}</h2>
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "admin.source"}}</th><th scope="col">{{$L.T "admin.compliance"}}</th><th scope="col">{{$L.T "table.status"}}</th><th scope="col">{{$L.T "admin.health"}}</th></tr></thead>
+    <tbody>
+    {{range $d.Sources}}
+      <tr><td>{{.Name}}<br><span class="small muted">{{.ID}}</span></td><td>{{.ComplianceStatus}}</td>
+      <td>{{if .Enabled}}<span class="badge verified">{{$L.T "admin.enabled"}}</span>{{else}}<span class="badge suspended">{{$L.T "admin.disabled"}}</span>{{end}}</td>
+      <td class="small">{{if .LastSuccessAt}}{{$L.T "admin.last_ok"}} {{$L.Date (dereft .LastSuccessAt)}}{{end}}{{if .LastError}}<br>{{$L.T "admin.last_error"}} {{.LastError}} ×{{$L.Num .ConsecutiveFailures}}{{end}}</td></tr>
+    {{end}}
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card" aria-labelledby="audit-h">
+  <h2 id="audit-h">{{$L.T "admin.audit"}}</h2>
+  <p class="muted small">{{$L.T "admin.audit_note"}}</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "admin.when"}}</th><th scope="col">{{$L.T "admin.who"}}</th><th scope="col">{{$L.T "admin.action"}}</th><th scope="col">{{$L.T "admin.target"}}</th></tr></thead>
+    <tbody>
+    {{range $d.Audit}}<tr><td class="small">{{$L.Date .CreatedAt}}</td><td class="small">{{if .ActorEmail}}{{.ActorEmail}}{{else}}system{{end}}</td><td>{{.Action}}</td><td>{{.EntityType}} #{{.EntityID}}</td></tr>{{end}}
+    </tbody>
+  </table></div>
+</section>
+</div>
+{{end}}

@@ -1,0 +1,35 @@
+# Local kind cluster: one replica each, demo local shops, the real online
+# shops (product pages only), AI estimates through OpenRouter, a self-signed
+# certificate.
+#
+# .env.dev holds this environment's secrets. It is git-ignored and created
+# with random values by `make kind-up` (tools/devctl).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ponnokhoj
+
+resources:
+  - ../../base
+  - issuer.yaml
+
+configMapGenerator:
+  - name: ponnokhoj-config
+    behavior: merge
+    envs:
+      - config.env
+
+secretGenerator:
+  - name: ponnokhoj-secrets
+    envs:
+      - .env.dev
+
+patches:
+  # Load the demo catalog, shops and listings (never in prod).
+  - target:
+      kind: Job
+      name: ponnokhoj-migrate
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/args
+        value: ["seed", "--demo"]

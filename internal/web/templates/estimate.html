@@ -1,0 +1,65 @@
+{{define "estimate"}}
+{{$L := .L}}{{with .Data}}
+<section id="estimate" class="card estimate" aria-labelledby="estimate-h" aria-live="polite"
+  {{if eq .State "pending"}}hx-get="{{.PollURL}}" hx-trigger="every 2s" hx-swap="outerHTML"{{end}}>
+  <div class="card-head">
+    <h2 id="estimate-h">{{$L.T "estimate.title"}}</h2>
+    {{if .Place}}<span class="muted small">{{$L.T "estimate.for"}} {{template "placename" (dict "L" $L "Scope" .Place)}}</span>{{end}}
+  </div>
+  {{if eq .State "ready"}}
+    <div class="notice"><p>{{$L.T "estimate.disclaimer"}}</p></div>
+    <p class="range">{{$L.Money .View.Low}} – {{$L.Money .View.High}}</p>
+    <div class="range-bar" aria-hidden="true"><span data-pos="{{rangePos .View.Low .View.Point .View.High}}"></span></div>
+    <div class="range-ends" aria-hidden="true"><span>{{$L.T "estimate.low"}}</span><span>{{$L.T "estimate.high"}}</span></div>
+    <p>{{$L.T "estimate.most_likely"}} <strong>{{$L.Money .View.Point}}</strong>
+      · {{$L.T "estimate.confidence"}} <span class="meter {{.View.Confidence}}" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge {{.View.Confidence}}">{{$L.T (printf "confidence.%s" .View.Confidence)}}</span></p>
+    <div class="explain">{{$L.Name .View.ExplanationEn .View.ExplanationBn}}</div>
+    <p class="small muted">{{$L.T (printf "method.%s" .View.Method)}}{{if .View.ModelID}} ({{.View.ModelID}}){{end}}
+      · {{$L.T "estimate.radius" ($L.Dist .RadiusF)}} · {{$L.T "estimate.computed"}} {{$L.Ago .View.CreatedAt}}</p>
+    {{if .View.FallbackReason}}<p class="small muted">{{$L.T "estimate.fallback"}}</p>{{end}}
+    {{template "evidence" (dict "L" $L "Evidence" .View.Evidence)}}
+  {{else if eq .State "pending"}}
+    <p><span class="spinner" aria-hidden="true"></span> {{$L.T "estimate.pending"}}</p>
+    <p class="small"><a href="{{.Back}}">{{$L.T "estimate.refresh"}}</a></p>
+  {{else if eq .State "insufficient_data"}}
+    <div class="notice"><p>{{$L.T "estimate.insufficient"}}</p></div>
+    {{if .View.Evidence.Items}}
+      <p>{{$L.T "estimate.online_exist"}}</p>
+      {{template "evidence" (dict "L" $L "Evidence" .View.Evidence)}}
+    {{end}}
+  {{else if eq .State "needs_location"}}
+    <div class="notice info"><p>{{$L.T "estimate.needs_location"}}</p></div>
+  {{else}}
+    {{if eq .State "failed"}}<p class="error-text">{{$L.T "estimate.failed"}}</p>{{end}}
+    {{if eq .State "suggested"}}<p>{{$L.T "estimate.suggested"}}</p>{{else}}<p>{{$L.T "estimate.intro"}}</p>{{end}}
+    <form method="post" action="/estimate" hx-post="/estimate" hx-target="#estimate" hx-swap="outerHTML" class="actions">
+      <input type="hidden" name="product" value="{{.ProductID}}">
+      {{range $k, $v := .PlaceFields}}<input type="hidden" name="{{$k}}" value="{{$v}}">{{end}}
+      <input type="hidden" name="back" value="{{.Back}}">
+      <button class="btn" type="submit">{{$L.T "estimate.request"}}</button>
+      <span class="htmx-indicator spinner" aria-hidden="true"></span>
+    </form>
+    <p class="small muted">{{$L.T "estimate.disclaimer"}}</p>
+  {{end}}
+</section>
+{{end}}
+{{end}}
+
+{{define "evidence"}}
+{{$L := .L}}
+<details>
+  <summary>{{$L.T "evidence.title" ($L.Num (len .Evidence.Items))}}</summary>
+  <div class="table-scroll">
+  <table class="cards">
+    <thead><tr><th scope="col">{{$L.T "evidence.type"}}</th><th scope="col" class="num">{{$L.T "evidence.price"}}</th><th scope="col" class="num">{{$L.T "evidence.distance"}}</th><th scope="col" class="num">{{$L.T "evidence.age"}}</th><th scope="col">{{$L.T "evidence.id"}}</th></tr></thead>
+    <tbody>
+    {{range .Evidence.Items}}
+      <tr><td data-label="{{$L.T "evidence.type"}}">{{$L.T (printf "evidence.type.%s" .Type)}}</td><td class="num" data-label="{{$L.T "evidence.price"}}">{{$L.Money (money .AdjustedPoisha)}}</td>
+      <td class="num" data-label="{{$L.T "evidence.distance"}}">{{if .DistanceM}}{{$L.Dist (deref .DistanceM)}}{{else}}–{{end}}</td><td class="num" data-label="{{$L.T "evidence.age"}}">{{$L.T "evidence.days" ($L.Num (printf "%.0f" .AgeDays))}}</td><td class="tiny muted" data-label="{{$L.T "evidence.id"}}">{{.ID}}</td></tr>
+    {{end}}
+    </tbody>
+  </table>
+  </div>
+  {{if ne .Evidence.Ratio.Scope ""}}<p class="small muted">{{$L.T (printf "evidence.ratio.%s" .Evidence.Ratio.Scope)}}</p>{{end}}
+</details>
+{{end}}

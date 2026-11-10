@@ -1,0 +1,37 @@
+version: "2"
+sql:
+  - engine: postgresql
+    schema: internal/migrations/sql
+    queries: internal/store/queries
+    gen:
+      go:
+        package: db
+        out: internal/store/db
+        sql_package: pgx/v5
+        emit_pointers_for_null_types: true
+        emit_empty_slices: true
+        overrides:
+          - db_type: timestamptz
+            go_type: time.Time
+          - db_type: timestamptz
+            nullable: true
+            go_type:
+              import: time
+              type: Time
+              pointer: true
+          - db_type: date
+            go_type: time.Time
+          # Geography columns are never scanned: queries project latitude and
+          # longitude with ST_Y/ST_X and write through pk_point(lat, lng).
+          # The override only keeps the generated models free of interface{}.
+          - db_type: geography
+            go_type: string
+          - db_type: geography
+            nullable: true
+            go_type:
+              type: string
+              pointer: true
+          - db_type: jsonb
+            go_type:
+              import: encoding/json
+              type: RawMessage

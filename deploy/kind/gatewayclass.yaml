@@ -1,0 +1,44 @@
+# Cluster infrastructure for kind (not part of the application manifests):
+# the "ponnokhoj" GatewayClass, implemented by Envoy Gateway, with the Envoy
+# proxy exposed on fixed NodePorts that kind maps to the host.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: ponnokhoj-kind
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+        container:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+      envoyService:
+        type: NodePort
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              ports:
+                - port: 80
+                  nodePort: 30080
+                - port: 443
+                  nodePort: 30443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: ponnokhoj
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: ponnokhoj-kind
+    namespace: envoy-gateway-system

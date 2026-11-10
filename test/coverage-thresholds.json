@@ -1,0 +1,13 @@
+{
+  "module": "github.com/shtmthw/ponnoKhoj",
+  "overall": 70,
+  "overall_prefixes": ["internal/"],
+  "files": {
+    "internal/domain/": 85,
+    "internal/search/normalize.go": 85,
+    "internal/search/translit.go": 85,
+    "internal/sources/price.go": 85,
+    "internal/estimate/baseline.go": 85,
+    "internal/estimate/validate.go": 85
+  }
+}

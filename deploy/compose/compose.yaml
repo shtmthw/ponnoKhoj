@@ -1,0 +1,89 @@
+# Local stack without Kubernetes: `make dev-up` / `make dev-down`.
+#
+# Postgres (PostGIS) -> migrate -> seed (with demo data) -> web + worker, on
+# http://localhost:8080. Secrets come from deploy/compose/.env, which
+# `devctl compose-env` generates with random values (git-ignored). Image tags
+# are passed in by the Makefile from deploy/versions.env.
+#
+# The online source is the built-in fictional demo shop, so this stack needs
+# no network access beyond pulling images. Set SOURCES_ENABLED and the LLM_*
+# variables in deploy/compose/.env to try real sources or an LLM.
+name: ponnokhoj
+
+x-app: &app
+  image: ${IMAGE:?set IMAGE (make dev-up does)}
+  read_only: true
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  environment: &env
+    PONNOKHOJ_ENV: dev
+    DATABASE_URL: postgres://ponnokhoj:${POSTGRES_PASSWORD:?}@db:5432/ponnokhoj?sslmode=disable
+    APP_SECRET: ${APP_SECRET:?}
+    PUBLIC_BASE_URL: http://localhost:8080
+    COOKIE_SECURE: "false"
+    LOG_FORMAT: text
+    SOURCES_ENABLED: ${SOURCES_ENABLED:-demoshop}
+    DEMO_SHOP_ENABLED: "true"
+    DEMO_SHOP_BASE_URL: http://web:8080/demo-shop
+    LLM_ENABLED: ${LLM_ENABLED:-false}
+    LLM_BASE_URL: ${LLM_BASE_URL:-}
+    LLM_MODEL: ${LLM_MODEL:-}
+    LLM_API_KEY: ${LLM_API_KEY:-}
+
+services:
+  db:
+    image: ${POSTGIS_IMAGE:?set POSTGIS_IMAGE (make dev-up does)}
+    environment:
+      POSTGRES_USER: ponnokhoj
+      POSTGRES_DB: ponnokhoj
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # TCP, not the socket: the image's init phase runs a socket-only server.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ponnokhoj -d ponnokhoj"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrate:
+    <<: *app
+    command: ["migrate", "up"]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  seed:
+    <<: *app
+    command: ["seed", "--demo"]
+    environment:
+      <<: *env
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?}
+      SEED_VENDOR_PASSWORD: ${SEED_VENDOR_PASSWORD:?}
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: "no"
+
+  web:
+    <<: *app
+    command: ["serve"]
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      seed: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "/ponnokhoj", "healthcheck"]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+    restart: unless-stopped
+
+  worker:
+    <<: *app
+    command: ["worker"]
+    depends_on:
+      seed: { condition: service_completed_successfully }
+      web: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  pgdata:

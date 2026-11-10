@@ -1,0 +1,249 @@
+{{define "content"}}
+{{$L := .L}}{{$d := .Data}}
+{{if not $d.HasQuery}}
+<section class="hero">
+  <div class="wrap">
+    <h1>{{$L.T "search.heading"}}</h1>
+    <p>{{$L.T "search.tagline"}}</p>
+  </div>
+</section>
+{{end}}
+<div class="wrap">
+<div class="layout{{if $d.HasQuery}} has-results{{end}}">
+  <aside>
+    {{template "searchform" .}}
+  </aside>
+  {{if $d.HasQuery}}
+  <div class="results-col">
+  {{with $d.Resp}}
+    {{if not .Selected}}
+      <div class="card empty">
+        <h2>{{$L.T "results.no_product"}}</h2>
+        <p>{{$L.T "results.no_product_hint"}}</p>
+      </div>
+    {{else}}
+      <div class="product-head">
+        <h1>{{if .Selected.Brand}}{{.Selected.Brand}} {{end}}{{$L.Name .Selected.NameEn .Selected.NameBn}}</h1>
+        {{if .Selected.IsDemo}}<span class="badge demo">{{$L.T "badge.demo"}}</span>{{end}}
+      </div>
+      <p class="product-meta">{{$L.Qty .Selected.Quantity}}{{if .Selected.Model}} · {{$L.T "results.model"}} {{.Selected.Model}}{{end}}</p>
+      {{if gt (len $d.ProductLinks) 1}}
+        <p class="small muted" id="cands">{{$L.T "results.candidates"}}</p>
+        <ul class="chips" aria-labelledby="cands">
+          {{range $d.ProductLinks}}<li><a href="{{.URL}}"{{if .Active}} aria-current="true"{{end}}>{{$L.Name .NameEn .NameBn}}</a></li>{{end}}
+        </ul>
+      {{end}}
+      <nav aria-label="{{$L.T "search.mode"}}"><ul class="tabs">
+        {{range $d.Tabs}}<li><a href="{{.URL}}"{{if .Active}} aria-current="page"{{end}}>{{$L.T .Label}}</a></li>{{end}}
+      </ul></nav>
+
+      {{with .Local}}
+      <section class="card" aria-labelledby="local-h">
+        <div class="card-head">
+          <h2 id="local-h">{{$L.T "local.title"}}</h2>
+          {{if not .NeedsLocation}}<span class="muted small">{{$L.T "local.count" ($L.Num .Total)}}</span>{{end}}
+        </div>
+        {{if .NeedsLocation}}
+          <div class="notice info"><p>{{$L.T "local.needs_location"}}</p></div>
+        {{else}}
+          {{template "scope" (dict "L" $L "Scope" .Scope "Radii" $d.Radii "RadiusF" $d.RadiusF "DistrictURL" $d.DistrictURL)}}
+          {{if .Listings}}
+            <ol class="results">
+            {{range $i, $li := .Listings}}
+              <li class="result{{if eq $i 0}} best{{end}}">
+                <div>
+                  <h3><a href="/shops/{{.ShopID}}">{{.ShopName}}</a> {{if .IsDemo}}<span class="badge demo">{{$L.T "badge.demo"}}</span>{{end}}</h3>
+                  <div class="where">{{.ShopAddress}} · {{$L.Name .AreaEn .AreaBn}}{{if .ParentAreaEn}}, {{$L.Name .ParentAreaEn .ParentAreaBn}}{{end}}{{if .HasDistance}} · <strong>{{$L.T "local.away" ($L.Dist .DistanceM)}}</strong>{{end}}</div>
+                  <div class="meta">
+                    <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span>
+                    <span>{{$L.T "local.updated"}} {{$L.Ago .UpdatedAt}}</span>
+                    {{if not .InStock}}<span class="badge out">{{$L.T "badge.out_of_stock"}}</span>{{end}}
+                    {{if .UnderReview}}<span class="badge review">{{$L.T "badge.under_review"}}</span>{{end}}
+                  </div>
+                </div>
+                <div class="side">
+                  {{if eq $i 0}}<span class="best-tag">{{$L.T "results.cheapest"}}</span>{{end}}
+                  <span class="price">{{$L.Money .Price}}</span>
+                  <a class="btn small secondary" href="{{.DirectionsURL}}" rel="noopener noreferrer" target="_blank">{{$L.T "local.directions"}}</a>
+                </div>
+              </li>
+            {{end}}
+            </ol>
+            {{if $d.NextURL}}<p class="actions"><a class="btn secondary" href="{{$d.NextURL}}">{{$L.T "results.more"}}</a></p>{{end}}
+            <div class="map" data-map data-lat="{{$d.MapLat}}" data-lng="{{$d.MapLng}}" data-zoom="12" {{if eq .Scope.Kind "point"}}data-radius="{{.RadiusM}}"{{end}} data-markers="{{$d.Markers}}" role="application" aria-label="{{$L.T "local.map_label"}}"></div>
+          {{else}}
+            <div class="empty">{{$L.T (printf "local.none.%s" .Scope.Kind)}}</div>
+          {{end}}
+        {{end}}
+      </section>
+      {{end}}
+
+      {{with .Online}}
+      <section class="card" aria-labelledby="online-h">
+        <div class="card-head">
+          <h2 id="online-h">{{$L.T "online.title"}}</h2>
+          {{if .Offers}}<span class="muted small">{{$L.T "online.count" ($L.Num (len .Offers))}}</span>{{end}}
+        </div>
+        {{if eq .SourcesEnabled 0}}
+          <div class="notice"><p>{{$L.T "online.no_sources"}}</p></div>
+        {{else if not .Covered}}
+          <div class="empty">{{$L.T "online.not_covered"}}</div>
+        {{else}}
+          {{if .Refreshing}}<p class="small muted"><span class="spinner" aria-hidden="true"></span> {{$L.T "online.refreshing"}} <a href="{{$d.SelfURL}}">{{$L.T "estimate.refresh"}}</a></p>{{end}}
+          {{if .FailedSources}}<div class="notice"><p>{{$L.T "online.failed" ($L.Num (len .FailedSources))}}</p></div>{{end}}
+          {{if .Offers}}
+            <ol class="results">
+            {{range $i, $o := .Offers}}
+              <li class="result{{if eq $i 0}} best{{end}}">
+                <div>
+                  <h3><a href="{{.URL}}" rel="noopener noreferrer nofollow" target="_blank">{{.Title}}</a></h3>
+                  <div class="where"><span class="source-logo" aria-hidden="true">{{initial .SourceName}}</span> {{.SourceName}} {{if .IsDemo}}<span class="badge demo">{{$L.T "badge.demo"}}</span>{{end}}</div>
+                  <div class="meta">
+                    {{if .InStock}}<span class="badge in">{{$L.T "badge.in_stock"}}</span>{{else}}<span class="badge out">{{$L.T "badge.out_of_stock"}}</span>{{end}}
+                    <span>{{$L.T "online.observed"}} {{$L.Ago .ObservedAt}}</span>
+                  </div>
+                </div>
+                <div class="side">
+                  {{if eq $i 0}}<span class="best-tag">{{$L.T "results.cheapest"}}</span>{{end}}
+                  <span class="price">{{$L.Money .Price}}</span>
+                  <a class="btn small secondary" href="{{.URL}}" rel="noopener noreferrer nofollow" target="_blank">{{$L.T "online.visit"}}</a>
+                </div>
+              </li>
+            {{end}}
+            </ol>
+            <p class="tiny muted">{{$L.T "online.disclaimer"}}</p>
+          {{else if not .Refreshing}}
+            <div class="empty">{{$L.T "online.none"}}</div>
+          {{end}}
+        {{end}}
+      </section>
+      {{end}}
+
+      {{if $d.Estimate}}{{template "estimate" (dict "L" $L "Data" $d.Estimate)}}{{end}}
+    {{end}}
+  {{end}}
+  </div>
+  {{else}}
+  <section class="features" aria-label="{{$L.T "home.how"}}">
+    <div class="feature"><h3>{{$L.T "home.local_title"}}</h3><p>{{$L.T "home.local_body"}}</p></div>
+    <div class="feature"><h3>{{$L.T "home.online_title"}}</h3><p>{{$L.T "home.online_body"}}</p></div>
+    <div class="feature"><h3>{{$L.T "home.estimate_title"}}</h3><p>{{$L.T "home.estimate_body"}}</p></div>
+  </section>
+  {{end}}
+</div>
+</div>
+{{end}}
+
+{{define "searchform"}}
+{{$L := .L}}{{$d := .Data}}
+<form class="card search-card" method="get" action="/search" role="search">
+  <details class="refine"{{if not $d.HasQuery}} open{{else}} data-open-desktop{{end}}>
+    <summary>
+      <span>{{if $d.HasQuery}}{{$L.T "search.change"}}{{else}}{{$L.T "search.q"}}{{end}}
+        {{if $d.HasQuery}}<span class="refine-summary">“{{$d.Form.Q}}”{{if $d.Scope}} · {{template "placename" (dict "L" $L "Scope" $d.Scope)}}{{end}}</span>{{end}}</span>
+    </summary>
+    <label for="q" class="sr-only">{{$L.T "search.q"}}</label>
+    <div class="query-row">
+      <input id="q" type="search" name="q" value="{{$d.Form.Q}}" maxlength="200" required placeholder="{{$L.T "search.q_placeholder"}}" autocomplete="off" enterkeyhint="search">
+    </div>
+
+    <fieldset class="form-section">
+      <legend>{{$L.T "search.mode"}}</legend>
+      <div class="seg">
+        {{range $d.Modes}}<input type="radio" id="mode-{{.Value}}" name="mode" value="{{.Value}}"{{if .Active}} checked{{end}}><label for="mode-{{.Value}}">{{$L.T .Label}}</label>{{end}}
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section" data-where-group>
+      <legend>{{$L.T "search.where"}}</legend>
+      <div class="seg full">
+        <input type="radio" id="where-area" name="where" value="area"{{if not $d.PointMode}} checked{{end}}><label for="where-area">{{$L.T "search.where_area"}}</label>
+        <input type="radio" id="where-point" name="where" value="point"{{if $d.PointMode}} checked{{end}}><label for="where-point">{{$L.T "search.where_point"}}</label>
+      </div>
+
+      <div class="where-panel" data-where="area">
+        <div class="grid two">
+          <div>
+            <label for="district">{{$L.T "search.district"}}</label>
+            <select id="district" name="district" hx-get="/areas/upazilas" hx-target="#upazila" hx-trigger="change" hx-swap="innerHTML">
+              <option value="">{{$L.T "search.district_none"}}</option>
+              {{range $d.Districts}}<option value="{{.ID}}"{{if eq .ID $d.Form.DistrictID}} selected{{end}}>{{$L.Name .NameEn .NameBn}}</option>{{end}}
+            </select>
+          </div>
+          <div>
+            <label for="upazila">{{$L.T "search.upazila"}} <span class="hint">{{$L.T "form.optional"}}</span></label>
+            <select id="upazila" name="upazila">
+              {{template "upazila_options" (dict "L" $L "Upazilas" $d.Upazilas "Selected" $d.Form.UpazilaID "HasDistrict" (gt $d.Form.DistrictID 0))}}
+            </select>
+          </div>
+        </div>
+        <p class="hint">{{$L.T "search.area_hint"}}</p>
+      </div>
+
+      <div class="where-panel" data-where="point">
+        <div class="actions">
+          <button class="btn secondary small" type="button" data-geolocate="picker" data-failed-text="{{$L.T "search.geolocate_failed"}}" hidden>{{$L.T "search.geolocate"}}</button>
+          <span class="hint">{{$L.T "search.exact_hint"}}</span>
+        </div>
+        <div id="picker" class="map" data-map data-lat="{{$d.MapLat}}" data-lng="{{$d.MapLng}}" data-zoom="{{$d.MapZoom}}" data-lat-input="lat" data-lng-input="lng" data-where-input="where-point" role="application" aria-label="{{$L.T "search.map_label"}}"></div>
+        <div class="grid two coords">
+          <div><label for="lat">{{$L.T "form.lat"}}</label><input id="lat" type="text" inputmode="decimal" name="lat" value="{{$d.Form.Lat}}"></div>
+          <div><label for="lng">{{$L.T "form.lng"}}</label><input id="lng" type="text" inputmode="decimal" name="lng" value="{{$d.Form.Lng}}"></div>
+        </div>
+        <div class="coords">
+          <label for="radius">{{$L.T "search.radius"}}</label>
+          <select id="radius" name="radius">
+            {{range $d.Radii}}<option value="{{.Value}}"{{if .Active}} selected{{end}}>{{$L.Dist .Meters}}</option>{{end}}
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-section">
+      <label for="category">{{$L.T "search.category"}}</label>
+      <select id="category" name="category">
+        <option value="">{{$L.T "search.category_any"}}</option>
+        {{range $d.Categories}}<option value="{{.ID}}"{{if eq .ID $d.Form.CategoryID}} selected{{end}}>{{$L.Name .NameEn .NameBn}}</option>{{end}}
+      </select>
+    </div>
+    <div class="form-section"><button class="btn block big" type="submit">{{$L.T "search.submit"}}</button></div>
+  </details>
+</form>
+{{end}}
+
+{{define "upazila_options"}}
+{{$L := .L}}
+{{if .HasDistrict}}
+  <option value="">{{$L.T "search.upazila_all"}}</option>
+  {{range .Upazilas}}<option value="{{.ID}}"{{if eq .ID $.Selected}} selected{{end}}>{{$L.Name .NameEn .NameBn}}</option>{{end}}
+{{else}}
+  <option value="">{{$L.T "search.upazila_pick_district"}}</option>
+{{end}}
+{{end}}
+
+{{define "placename"}}{{$L := .L}}{{with .Scope}}{{if eq .Kind "point"}}{{$L.T "scope.pinned"}}{{else if eq .Kind "upazila"}}{{$L.Name .AreaEn .AreaBn}}, {{$L.Name .DistrictEn .DistrictBn}}{{else}}{{$L.Name .AreaEn .AreaBn}}{{end}}{{end}}{{end}}
+
+{{define "scope"}}
+{{$L := .L}}{{with .Scope}}
+<div class="scope">
+  <div class="scope-text">
+    {{if eq .Kind "point"}}
+      {{$L.T "scope.point" ($L.Dist $.RadiusF)}}
+    {{else if eq .Kind "upazila"}}
+      {{$L.T "scope.upazila" ($L.Name .AreaEn .AreaBn) ($L.Name .DistrictEn .DistrictBn)}}
+    {{else}}
+      {{$L.T "scope.district" ($L.Name .AreaEn .AreaBn)}}
+      <span class="hint">{{$L.T "scope.district_hint"}}</span>
+    {{end}}
+  </div>
+  {{if eq .Kind "point"}}
+    <div class="radius-chips" role="group" aria-label="{{$L.T "scope.change_radius"}}">
+      <span class="tiny muted">{{$L.T "scope.change_radius"}}</span>
+      {{range $.Radii}}{{if .Active}}<span class="cur" aria-current="true">{{$L.Dist .Meters}}</span>{{else}}<a href="{{.URL}}">{{$L.Dist .Meters}}</a>{{end}}{{end}}
+    </div>
+  {{else if eq .Kind "upazila"}}
+    {{if $.DistrictURL}}<a class="btn small secondary" href="{{$.DistrictURL}}">{{$L.T "scope.whole_district" ($L.Name .DistrictEn .DistrictBn)}}</a>{{end}}
+  {{end}}
+</div>
+{{end}}
+{{end}}

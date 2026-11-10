@@ -1,0 +1,85 @@
+{
+ "description": "Product titles observed on 2026-11-10 on the approved shops' product pages for each reference-catalog product, keyed by product page slug. The matching test checks every catalog product matches its own titles.",
+ "titles": {
+  "tp-link-archer-c6-ac1200-gigabit-router": {
+   "startech": "TP-Link Archer C6 AC1200 Dual Band Gigabit WiFi Router",
+   "techland": "TP-Link Archer C6 AC1200 Wireless MU-MIMO Gigabit 4 Antenna Router"
+  },
+  "tenda-ac8-ac1200-router": {
+   "startech": "Tenda AC8 AC1200 Dual-Band Gigabit Wi-Fi Router",
+   "techland": "Tenda AC8 AC1200 Dual-Band Gigabit Smart Wi-Fi Router"
+  },
+  "tp-link-deco-x20-ax1800-router-2-pack": {
+   "startech": "TP-Link Deco X20 AX1800 Dual-Band Mesh Router (2 Pack)",
+   "techland": "TP-Link Deco X20 AX1800 Whole Home Mesh Wi-Fi 6 Router (2 Pack)"
+  },
+  "mercusys-mw300re-range-extender": {
+   "startech": "Mercusys MW300RE 300Mbps Wi-Fi Range Extender",
+   "techland": "Mercusys  MW300RE 300Mbps Wi-Fi Range Extender"
+  },
+  "logitech-b170-mouse": {
+   "startech": "Logitech B170 Wireless Mouse",
+   "techland": "Logitech B170 Wireless Mouse"
+  },
+  "a4tech-4200n-keyboard-mouse-combo": {
+   "startech": "A4TECH 4200N Wireless Keyboard Mouse Combo",
+   "techland": "A4TECH 4200N Wireless Keyboard Mouse Combo"
+  },
+  "anker-zolo-10000mah-power-bank": {
+   "startech": "Anker Zolo 10000mAh 35W Power Bank With Built-in Dual Type-C Cable",
+   "techland": "Anker Zolo 10000mAh 35W Power Bank With Built-in Dual Type-C Cable"
+  },
+  "anker-zolo-20000mah-power-bank": {
+   "startech": "Anker Zolo 20000mAh 22.5W Power Bank with Built-in Type-C Cable",
+   "techland": "Anker Zolo 20000mAh 22.5W Fast Charging Power Bank with Built-in Type-C Cable"
+  },
+  "baseus-qpow-pro-10000mah-20w-power-bank": {
+   "startech": "Baseus Qpow Pro 10000mAh 20W Digital Display Fast Charge Power Bank",
+   "techland": "Baseus Qpow PRO 10000mAh 20W fast Charger Power bank (White)"
+  },
+  "sandisk-cruzer-glide-32gb-flash-drive": {
+   "startech": "SanDisk Cruzer Glide CZ600 32GB USB 3.0 Black Pendrive",
+   "techland": "SanDisk Cruzer Glide CZ600 32GB USB 3.0 Black Pendrive"
+  },
+  "sandisk-cruzer-glide-128gb-flash-drive": {
+   "startech": "SanDisk Cruzer Glide 128GB USB 3.0 Flash Drive (SDCZ600-128G-G35)",
+   "techland": "SANDISK CRUZER GLIDE 128GB USB 3.0 FLASH DRIVE"
+  },
+  "adata-uv150-32gb-pendrive": {
+   "startech": "Adata UV150 32GB USB 3.2 Mobile Disk Pendrive",
+   "techland": "Adata UV150 32GB USB 3.1 Mobile Disk Pen drive"
+  },
+  "apacer-ah356-64gb-flash-drive": {
+   "startech": "Apacer AH356 64GB USB 3.2 Gen 1 Flash Drive",
+   "techland": "APACER AH356 64GB USB 3.2 GEN 1 FLASH DRIVE"
+  },
+  "crucial-8gb-ddr4-3200mhz-laptop-ram": {
+   "startech": "Crucial 8GB Single DDR4 3200MHz Laptop RAM",
+   "techland": "Crucial 8GB DDR4 3200mhz SODIMM Laptop Ram"
+  },
+  "anker-soundcore-p30i-anc-tws-earbuds": {
+   "startech": "Anker Soundcore P30i",
+   "techland": "Anker Soundcore P30i ANC TWS Earbuds"
+  },
+  "xiaomi-redmi-buds-6-active-earbuds": {
+   "startech": "Xiaomi Redmi Buds 6 Active",
+   "techland": "Xiaomi Redmi Buds 6 Active True Wireless Earbuds"
+  },
+  "edifier-x2s-true-wireless-earbuds": {
+   "startech": "Edifier X2s True Wireless Earbuds",
+   "techland": "EDIFIER X2S TRUE WIRELESS SEMI-IN-EAR EARBUDS"
+  },
+  "edifier-r12u-speaker": {
+   "startech": "Edifier R12U USB powered Multimedia speaker",
+   "techland": "Edifier R12U Stereo Computer Speaker"
+  },
+  "edifier-mp100-plus-portable-bluetooth-speaker": {
+   "startech": "Edifier MP100 Plus Portable Bluetooth Speaker",
+   "techland": "EDIFIER MP100 PLUS PORTABLE BLUETOOTH SPEAKER"
+  },
+  "aoc-24g11e2-gaming-monitor": {
+   "startech": "AOC 24G11E2 23.8\" 180Hz FHD FAST IPS Gaming Monitor",
+   "techland": "AOC 24G11E2 23.8 Inch 180Hz FHD FAST IPS Gaming Monitor"
+  }
+ }
+}

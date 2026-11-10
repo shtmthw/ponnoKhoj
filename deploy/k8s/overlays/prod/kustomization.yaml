@@ -1,0 +1,100 @@
+# Production. The domain (ponnokhoj.example.com, a reserved placeholder),
+# the backup bucket and values marked REPLACE_ME are the owner's to supply;
+# see docs/runbook.md. The image is set by
+# `make deploy-prod IMAGE=docker.io/<user>/ponnokhoj@sha256:...`.
+#
+# Requires in the cluster: CloudNativePG + the Barman Cloud plugin, a
+# Gateway API implementation exposing a GatewayClass named "ponnokhoj",
+# cert-manager with a ClusterIssuer "letsencrypt-prod", External Secrets
+# Operator with a ClusterSecretStore "ponnokhoj", and metrics-server (HPA).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ponnokhoj
+
+resources:
+  - ../../base
+  - hpa.yaml
+  - externalsecret.yaml
+  - backup.yaml
+  - redirect.yaml
+
+configMapGenerator:
+  - name: ponnokhoj-config
+    behavior: merge
+    envs:
+      - config.env
+
+images:
+  - name: ponnokhoj
+    newName: docker.io/matthew552/ponnokhoj
+    newTag: REPLACE_ME
+
+patches:
+  - target:
+      kind: Deployment
+      name: ponnokhoj-web
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: Always
+  - target:
+      kind: Deployment
+      name: ponnokhoj-worker
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: Always
+  - target:
+      kind: Cluster
+      name: ponnokhoj-db
+    patch: |-
+      - op: replace
+        path: /spec/instances
+        value: 3
+      - op: replace
+        path: /spec/storage/size
+        value: 20Gi
+      - op: add
+        path: /spec/affinity
+        value:
+          enablePodAntiAffinity: true
+          topologyKey: kubernetes.io/hostname
+      - op: add
+        path: /spec/plugins
+        value:
+          - name: barman-cloud.cloudnative-pg.io
+            isWALArchiver: true
+            parameters:
+              barmanObjectName: ponnokhoj-backups
+  - target:
+      kind: Certificate
+      name: ponnokhoj-tls
+    patch: |-
+      - op: replace
+        path: /spec/issuerRef
+        value:
+          name: letsencrypt-prod
+          kind: ClusterIssuer
+      - op: replace
+        path: /spec/dnsNames
+        value: ["ponnokhoj.example.com"]
+  # The application is served on HTTPS only; HTTP gets redirect.yaml.
+  - target:
+      kind: HTTPRoute
+      name: ponnokhoj
+    patch: |-
+      - op: replace
+        path: /spec/parentRefs
+        value:
+          - name: ponnokhoj
+            sectionName: https
+      - op: add
+        path: /spec/hostnames
+        value: ["ponnokhoj.example.com"]

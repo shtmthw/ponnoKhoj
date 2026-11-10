@@ -1,0 +1,29 @@
+# kind cluster for local development and CI e2e. The node image is pinned
+# in deploy/versions.env (KIND_NODE_IMAGE) and passed by `make kind-up`.
+# The Envoy proxy's NodePorts (deploy/kind/gatewayclass.yaml) are mapped to
+# the host, on loopback only:
+#   http://localhost:8088   https://localhost:8443 (self-signed)
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: ponnokhoj
+nodes:
+  - role: control-plane
+    # Disposable local cluster: etcd skips fsync. On slow VM disks (Docker
+    # Desktop) fsync latency of seconds otherwise makes the scheduler and
+    # controller-manager lose their leases and crash-loop. Never in prod.
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        etcd:
+          local:
+            extraArgs:
+              unsafe-no-fsync: "true"
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 8088
+        listenAddress: 127.0.0.1
+        protocol: TCP
+      - containerPort: 30443
+        hostPort: 8443
+        listenAddress: 127.0.0.1
+        protocol: TCP

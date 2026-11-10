@@ -1,0 +1,19 @@
+# The CI e2e environment: the dev overlay on kind, but fully offline. The
+# online source is the built-in fictional demo shop and estimates are
+# statistical (no LLM), so the e2e gate needs no secrets and never touches
+# the live network (agentPlan.md §5, §11.1). The LLM path is covered by the
+# recorded-fake tests in internal/estimate and internal/llm.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ponnokhoj
+
+resources:
+  - ../dev
+  - networkpolicy.yaml
+
+configMapGenerator:
+  - name: ponnokhoj-config
+    behavior: merge
+    envs:
+      - config.env

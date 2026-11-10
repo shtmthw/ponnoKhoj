@@ -1,0 +1,24 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<div class="auth-card">
+<h1>{{.Title}}</h1>
+<p class="muted">{{if $d.SignUp}}{{$L.T "auth.signup_intro"}}{{else}}{{$L.T "auth.login_intro"}}{{end}}</p>
+<form class="card stack" method="post" action="{{$d.Action}}">
+  {{if $d.Error}}<p class="error-text" role="alert">{{$d.Error}}</p>{{end}}
+  <input type="hidden" name="next" value="{{$d.Next}}">
+  {{if $d.SignUp}}
+  <div><label for="name">{{$L.T "auth.name"}}</label><input id="name" type="text" name="name" value="{{$d.Name}}" maxlength="100" required autocomplete="name"></div>
+  {{end}}
+  <div><label for="email">{{$L.T "auth.email"}}</label><input id="email" type="email" name="email" value="{{$d.Email}}" maxlength="254" required autocomplete="email"></div>
+  <div><label for="password">{{$L.T "auth.password"}} {{if $d.SignUp}}<span class="hint">{{$L.T "auth.password_hint"}}</span>{{end}}</label>
+    <input id="password" type="password" name="password" required minlength="{{if $d.SignUp}}10{{else}}1{{end}}" maxlength="256" autocomplete="{{if $d.SignUp}}new-password{{else}}current-password{{end}}"></div>
+  <div class="actions">
+    <button class="btn block big" type="submit">{{.Title}}</button>
+    {{if $d.SignUp}}<a href="/vendor/login">{{$L.T "auth.have_account"}}</a>{{else}}<a href="/vendor/signup">{{$L.T "auth.need_account"}}</a>{{end}}
+  </div>
+</form>
+{{if $d.SignUp}}<div class="card"><h2>{{$L.T "auth.how_title"}}</h2><p>{{$L.T "auth.how_body"}}</p></div>{{end}}
+</div>
+</div>
+{{end}}
