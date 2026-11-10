@@ -1,0 +1,5 @@
+[
+  {"tool_calls": [{"id": "call_1", "name": "get_local_listings", "arguments": {}}], "prompt_tokens": 400, "completion_tokens": 20},
+  {"content": "{\"low\": 1000, \"point\": 40500, \"high\": 43000, \"confidence\": \"medium\", \"evidence_ids\": [\"L1\"], \"explanation_bn\": \"ব্যাখ্যা\", \"explanation_en\": \"Low bound far below any evidence.\"}", "prompt_tokens": 700, "completion_tokens": 80},
+  {"content": "{\"low\": 39000, \"point\": 40500, \"high\": 990000, \"confidence\": \"medium\", \"evidence_ids\": [\"L1\"], \"explanation_bn\": \"ব্যাখ্যা\", \"explanation_en\": \"High bound far above any evidence.\"}", "prompt_tokens": 800, "completion_tokens": 80}
+]

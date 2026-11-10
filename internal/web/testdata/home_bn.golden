@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="অনলাইনে, আপনার কাছের দোকানে পণ্যের দাম তুলনা করুন; কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক অনুমান পান।">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>সেরা দাম খুঁজুন · পণ্যখোঁজ</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">মূল অংশে যান</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="পণ্যখোঁজ"><span class="logo-mark" aria-hidden="true">৳</span>পণ্যখোঁজ</a>
+    <nav class="site-nav" aria-label="প্রধান মেনু">
+      <a href="/">খুঁজুন</a>
+      
+        <a href="/vendor/login">দোকানদারদের জন্য</a>
+      
+      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+
+
+<section class="hero">
+  <div class="wrap">
+    <h1>সেরা দাম খুঁজুন</h1>
+    <p>অনলাইনের দাম, আপনার কাছের দোকানের দাম, আর কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক এআই অনুমান — সব এক জায়গায়।</p>
+  </div>
+</section>
+
+<div class="wrap">
+<div class="layout">
+  <aside>
+    
+
+<form class="card search-card" method="get" action="/search" role="search">
+  <details class="refine" open>
+    <summary>
+      <span>কী খুঁজছেন?
+        </span>
+    </summary>
+    <label for="q" class="sr-only">কী খুঁজছেন?</label>
+    <div class="query-row">
+      <input id="q" type="search" name="q" value="" maxlength="200" required placeholder="যেমন: মিনিকেট চাল ৫ কেজি" autocomplete="off" enterkeyhint="search">
+    </div>
+
+    <fieldset class="form-section">
+      <legend>দামের উৎস</legend>
+      <div class="seg">
+        <input type="radio" id="mode-all" name="mode" value="all" checked><label for="mode-all">সব</label><input type="radio" id="mode-local" name="mode" value="local"><label for="mode-local">স্থানীয় দোকান</label><input type="radio" id="mode-online" name="mode" value="online"><label for="mode-online">অনলাইন</label><input type="radio" id="mode-estimate" name="mode" value="estimate"><label for="mode-estimate">এআই অনুমান</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section" data-where-group>
+      <legend>কোথায়</legend>
+      <div class="seg full">
+        <input type="radio" id="where-area" name="where" value="area"><label for="where-area">এলাকা দিয়ে</label>
+        <input type="radio" id="where-point" name="where" value="point" checked><label for="where-point">সঠিক অবস্থান</label>
+      </div>
+
+      <div class="where-panel" data-where="area">
+        <div class="grid two">
+          <div>
+            <label for="district">জেলা</label>
+            <select id="district" name="district" hx-get="/areas/upazilas" hx-target="#upazila" hx-trigger="change" hx-swap="innerHTML">
+              <option value="">— জেলা বেছে নিন —</option>
+              <option value="16">চট্টগ্রাম</option><option value="55">ঢাকা</option>
+            </select>
+          </div>
+          <div>
+            <label for="upazila">উপজেলা / থানা <span class="hint">(ঐচ্ছিক)</span></label>
+            <select id="upazila" name="upazila">
+              
+
+
+  <option value="">আগে জেলা বেছে নিন</option>
+
+
+            </select>
+          </div>
+        </div>
+        <p class="hint">শুধু জেলা দিলে পুরো জেলার সব দোকান দেখাবে। উপজেলা দিলে শুধু সেই উপজেলার দোকান; আর সঠিক অবস্থান দিলে আপনার চারপাশের নির্দিষ্ট দূরত্বের মধ্যে খোঁজা যাবে।</p>
+      </div>
+
+      <div class="where-panel" data-where="point">
+        <div class="actions">
+          <button class="btn secondary small" type="button" data-geolocate="picker" data-failed-text="আপনার অবস্থান পাওয়া যায়নি" hidden>আমার অবস্থান ব্যবহার করুন</button>
+          <span class="hint">মানচিত্রে চাপ দিয়ে পিন বসান, অথবা ডিভাইসের অবস্থান ব্যবহার করুন। শুধু মোটামুটি (~১ কিমি) এলাকা সংরক্ষণ করা হয়।</span>
+        </div>
+        <div id="picker" class="map" data-map data-lat="22.335109" data-lng="91.834073" data-zoom="12" data-lat-input="lat" data-lng-input="lng" data-where-input="where-point" role="application" aria-label="খোঁজার অবস্থান বাছাইয়ের মানচিত্র"></div>
+        <div class="grid two coords">
+          <div><label for="lat">অক্ষাংশ</label><input id="lat" type="text" inputmode="decimal" name="lat" value="22.335109"></div>
+          <div><label for="lng">দ্রাঘিমাংশ</label><input id="lng" type="text" inputmode="decimal" name="lng" value="91.834073"></div>
+        </div>
+        <div class="coords">
+          <label for="radius">দূরত্বের মধ্যে</label>
+          <select id="radius" name="radius">
+            <option value="1000">১.০ কিমি</option><option value="3000" selected>৩.০ কিমি</option><option value="10000">১০.০ কিমি</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-section">
+      <label for="category">বিভাগ</label>
+      <select id="category" name="category">
+        <option value="">যেকোনো বিভাগ</option>
+        <option value="2">চাল ও শস্য</option>
+      </select>
+    </div>
+    <div class="form-section"><button class="btn block big" type="submit">খুঁজুন</button></div>
+  </details>
+</form>
+
+  </aside>
+  
+  <section class="features" aria-label="যেভাবে কাজ করে">
+    <div class="feature"><h3>স্থানীয় দোকান</h3><p>দোকানদাররা নিজেরাই দাম দেন — অনলাইন স্টোর লাগে না। পুরো জেলা, একটি উপজেলা বা আপনার চারপাশে খুঁজুন, তারপর দোকানে গিয়ে কিনুন।</p></div>
+    <div class="feature"><h3>অনলাইন শপ</h3><p>অনলাইন শপের প্রকাশ্য পণ্য-পাতা থেকে নেওয়া দাম, কম দাম আগে, কেনার লিংকসহ। আপাতত ইলেকট্রনিক্স (স্টার টেক, টেক ল্যান্ড)।</p></div>
+    <div class="feature"><h3>এআই মূল্য অনুমান</h3><p>কাছের কোনো দোকানে দাম না থাকলে শুধু বাস্তব তথ্য — দূরের দোকানের দাম, অনলাইনের দাম ও একই ধরনের পণ্য — থেকে একটি মূল্য-পরিসর পান। তথ্য না থাকলে আন্দাজ নয়।</p></div>
+  </section>
+  
+</div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>পণ্যখোঁজ সম্পূর্ণ এজেন্ট-চালিত একটি প্রকল্প: একজন মানুষের দিকনির্দেশনায় এআই কোডিং এজেন্টরা এটি তৈরি ও রক্ষণাবেক্ষণ করে।</p>
+    <p>অনলাইনের দাম দোকানগুলোর প্রকাশ্য পণ্য-পাতা থেকে (তাদের robots.txt মেনে) নেওয়া হয় এবং দোকানের লিংক দেওয়া থাকে। কেনার আগে দোকানে দাম নিশ্চিত করুন।</p>
+    <p>মানচিত্রের তথ্য: © OpenStreetMap contributors</p>
+    <p>ডেমো মোড: “ডেমো” চিহ্নিত দোকান, দাম ও অনলাইন অফারগুলো কাল্পনিক।</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Compare prices of a product online, at shops near you, and get an evidence-based estimate when no nearby shop lists it.">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Admin review · ponnoKhoj</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ponnoKhoj"><span class="logo-mark" aria-hidden="true">৳</span>ponnoKhoj</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/">Search</a>
+      
+        <a href="/vendor">My shops</a>
+        <a href="/admin">Admin</a>
+        <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">Log out</button></form>
+      
+      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+<div class="wrap">
+
+<div class="page-head"><h1>Admin review</h1></div>
+<div class="stat-row">
+  <div class="stat"><b>1</b><span>Shops waiting for verification</span></div>
+  <div class="stat"><b>1</b><span>Open reports</span></div>
+  <div class="stat"><b>1</b><span>Proposed products</span></div>
+  <div class="stat"><b>1</b><span>Unusual prices</span></div>
+</div>
+
+<section class="card" aria-labelledby="pending-h">
+  <h2 id="pending-h">Shops waiting for verification (1)</h2>
+  
+  <div class="table-scroll"><table class="cards">
+    <thead><tr><th scope="col">Shop</th><th scope="col">Submitted by</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td data-label="Shop"><a href="/shops/3"><strong>Rahim Store</strong></a>
+          <div class="description"><span class="muted">No description given.</span></div>
+          <span class="small muted">12 Station Road · Kotwali</span><br>
+          <span class="tiny muted">submitted 106751 d ago · <a href="https://www.openstreetmap.org/?mlat=0&amp;mlon=0#map=17/0/0" rel="noopener noreferrer" target="_blank">See the pin on the map</a></span></td>
+        <td data-label="Submitted by"><br><span class="small muted">rahim@example.com</span></td>
+        <td class="actions">
+          <form method="post" action="/admin/shops/3/status"><input type="hidden" name="status" value="verified"><button class="btn small" type="submit">Verify</button></form>
+          <form method="post" action="/admin/shops/3/status"><input type="hidden" name="status" value="suspended"><button class="btn danger small" type="submit">Suspend</button></form>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card" aria-labelledby="reports-h">
+  <h2 id="reports-h">Open reports (1)</h2>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">Target</th><th scope="col">Reason</th><th scope="col">Note</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td><a href="/shops/3">Rahim Store</a><br><span class="small">Miniket Rice 5 kg — ৳405</span></td>
+        <td>The price is wrong</td>
+        <td>it was 450 in the shop</td>
+        <td class="actions">
+          <form method="post" action="/admin/reports/resolve"><input type="hidden" name="target" value="listing"><input type="hidden" name="id" value="11"><input type="hidden" name="uphold" value="1"><button class="btn danger small" type="submit">Uphold</button></form>
+          <form method="post" action="/admin/reports/resolve"><input type="hidden" name="target" value="listing"><input type="hidden" name="id" value="11"><input type="hidden" name="uphold" value="0"><button class="btn secondary small" type="submit">Dismiss</button></form>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card" aria-labelledby="proposals-h">
+  <h2 id="proposals-h">Proposed products (1)</h2>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">Product</th><th scope="col">Category</th><th scope="col">Submitted by</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td><strong>Puffed Rice 500 g</strong> / <span lang="bn">মুড়ি ৫০০ গ্রাম</span><br><span class="small muted">  · 500 g</span></td>
+        <td>Rice &amp; Grains</td><td>rahim@example.com</td>
+        <td class="actions">
+          <form method="post" action="/admin/products/40/review"><input type="hidden" name="approve" value="1"><button class="btn small" type="submit">Approve</button></form>
+          <form method="post" action="/admin/products/40/review"><input type="hidden" name="approve" value="0"><button class="btn danger small" type="submit">Reject</button></form>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card" aria-labelledby="anomalies-h">
+  <h2 id="anomalies-h">Unusual prices (1)</h2>
+  <p class="small muted">Prices more than 3× or less than ⅓ of the local median. They stay visible with a label but are not used for estimates until reviewed.</p>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">Product</th><th scope="col">Shop</th><th scope="col" class="num">Price</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td><a href="/search?product=20&amp;mode=all">Potato 1 kg</a></td>
+        <td><a href="/shops/3">Rahim Store</a></td>
+        <td class="num">৳120</td>
+        <td class="actions">
+          <form method="post" action="/admin/listings/12/anomaly"><input type="hidden" name="hide" value="0"><button class="btn small" type="submit">Price is right</button></form>
+          <form method="post" action="/admin/listings/12/anomaly"><input type="hidden" name="hide" value="1"><button class="btn danger small" type="submit">Hide listing</button></form>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card" aria-labelledby="sources-h">
+  <h2 id="sources-h">Online sources</h2>
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">Source</th><th scope="col">Compliance</th><th scope="col">Status</th><th scope="col">Health</th></tr></thead>
+    <tbody>
+    
+      <tr><td>ponnoKhoj Demo Shop (fictional)<br><span class="small muted">demoshop</span></td><td>demo</td>
+      <td><span class="badge verified">Enabled</span></td>
+      <td class="small">Last success: 2026-11-10 11:00<br>Last error: timeout ×2</td></tr>
+    
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card" aria-labelledby="audit-h">
+  <h2 id="audit-h">Recent activity (audit log)</h2>
+  <p class="muted small">The 20 most recent actions, newest first.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
+    <tbody>
+    <tr><td class="small">2026-11-10 12:00</td><td class="small">admin@ponnokhoj.test</td><td>shop_verified</td><td>shop #3</td></tr><tr><td class="small">2026-11-10 12:00</td><td class="small">system</td><td>auto_hide</td><td>listing #11</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>ponnoKhoj is a fully agent-driven project: it is built and maintained by AI coding agents under a human owner&#39;s direction.</p>
+    <p>Online prices are read from the shops&#39; public product pages, following their robots.txt, and link back to the shop. Always confirm the price with the shop before buying.</p>
+    <p>Map data: © OpenStreetMap contributors</p>
+    <p>Demo mode: shops, prices and online offers marked “Demo” are fictional.</p>
+  </div>
+</footer>
+</body>
+</html>

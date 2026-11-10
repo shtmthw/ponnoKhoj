@@ -1,0 +1,4 @@
+[
+  {"tool_calls": [{"id": "call_1", "name": "get_local_listings", "arguments": {}}, {"id": "call_2", "name": "get_online_offers", "arguments": {}}], "prompt_tokens": 410, "completion_tokens": 28},
+  {"content": "{\"low\": 39000, \"point\": 40500, \"high\": 43000, \"confidence\": \"high\", \"evidence_ids\": [\"L1\", \"L2\", \"L3\", \"O1\"], \"explanation_bn\": \"কাছের চারটি দোকানের দাম কাছাকাছি।\", \"explanation_en\": \"Four nearby shops agree closely and the online price is a little higher.\"}", "prompt_tokens": 760, "completion_tokens": 96}
+]

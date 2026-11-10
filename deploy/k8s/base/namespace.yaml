@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ponnokhoj
+  labels:
+    # Pod Security Admission: only pods that meet the "restricted" profile
+    # (non-root, no privilege escalation, all capabilities dropped,
+    # RuntimeDefault seccomp) are admitted.
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

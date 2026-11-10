@@ -1,0 +1,42 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<div class="page-head"><h1>{{.Title}}</h1><a class="btn ghost small" href="{{$d.Cancel}}">{{$L.T "form.cancel"}}</a></div>
+<form class="card stack" method="post" action="{{$d.Action}}">
+  {{if $d.Error}}<p class="error-text" role="alert">{{$d.Error}}</p>{{end}}
+  <div><label for="name">{{$L.T "shopform.name"}}</label><input id="name" type="text" name="name" value="{{$d.Name}}" maxlength="120" required></div>
+  <div>
+    <label for="description">{{$L.T "shopform.description"}}</label>
+    <textarea id="description" name="description" minlength="20" maxlength="1000" required aria-describedby="description-hint">{{$d.Description}}</textarea>
+    <span class="hint" id="description-hint">{{$L.T "shopform.description_hint"}}</span>
+  </div>
+  <div><label for="address">{{$L.T "shopform.address"}}</label><input id="address" type="text" name="address" value="{{$d.Address}}" maxlength="300" required></div>
+  <div>
+    <label for="area">{{$L.T "shopform.area"}}</label>
+    <select id="area" name="area" required>
+      <option value="">{{$L.T "shopform.area_choose"}}</option>
+      {{range $d.AreaGroups}}<optgroup label="{{$L.Name .NameEn .NameBn}}">
+        <option value="{{.DistrictID}}"{{if eq .DistrictID $d.AreaID}} selected{{end}}>{{$L.T "shopform.area_district_level" ($L.Name .NameEn .NameBn)}}</option>
+        {{range .Upazilas}}<option value="{{.ID}}"{{if eq .ID $d.AreaID}} selected{{end}}>{{$L.Name .NameEn .NameBn}}</option>{{end}}
+      </optgroup>{{end}}
+    </select>
+    <span class="hint">{{$L.T "shopform.area_hint"}}</span>
+  </div>
+  <fieldset>
+    <legend>{{$L.T "shopform.pin"}}</legend>
+    <p class="hint">{{$L.T "shopform.pin_hint"}}</p>
+    <p><button class="btn secondary small" type="button" data-geolocate="pin-map" data-failed-text="{{$L.T "search.geolocate_failed"}}" hidden>{{$L.T "search.geolocate"}}</button></p>
+    <div id="pin-map" class="map tall" data-map data-lat="{{$d.MapLat}}" data-lng="{{$d.MapLng}}" data-zoom="{{$d.MapZoom}}" data-lat-input="lat" data-lng-input="lng" role="application" aria-label="{{$L.T "shopform.pin"}}"></div>
+    <div class="grid two">
+      <div><label for="lat">{{$L.T "form.lat"}}</label><input id="lat" type="text" inputmode="decimal" name="lat" value="{{$d.Lat}}" required></div>
+      <div><label for="lng">{{$L.T "form.lng"}}</label><input id="lng" type="text" inputmode="decimal" name="lng" value="{{$d.Lng}}" required></div>
+    </div>
+  </fieldset>
+  <div class="grid two">
+    <div><label for="phone">{{$L.T "shop.phone"}} <span class="hint">{{$L.T "form.optional"}}</span></label><input id="phone" type="text" inputmode="tel" name="phone" value="{{$d.Phone}}" maxlength="30"></div>
+    <div><label for="hours">{{$L.T "shop.hours"}} <span class="hint">{{$L.T "form.optional"}}</span></label><input id="hours" type="text" name="opening_hours" value="{{$d.OpeningHours}}" maxlength="200"></div>
+  </div>
+  <div class="actions"><button class="btn" type="submit">{{$L.T "form.save"}}</button> <a href="{{$d.Cancel}}">{{$L.T "form.cancel"}}</a></div>
+</form>
+</div>
+{{end}}

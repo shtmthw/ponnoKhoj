@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="অনলাইনে, আপনার কাছের দোকানে পণ্যের দাম তুলনা করুন; কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক অনুমান পান।">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Miniket Rice 5 kg · পণ্যখোঁজ</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">মূল অংশে যান</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="পণ্যখোঁজ"><span class="logo-mark" aria-hidden="true">৳</span>পণ্যখোঁজ</a>
+    <nav class="site-nav" aria-label="প্রধান মেনু">
+      <a href="/">খুঁজুন</a>
+      
+        <a href="/vendor/login">দোকানদারদের জন্য</a>
+      
+      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+
+
+<div class="wrap">
+<div class="layout has-results">
+  <aside>
+    
+
+<form class="card search-card" method="get" action="/search" role="search">
+  <details class="refine" data-open-desktop>
+    <summary>
+      <span>খোঁজ বদলান
+        <span class="refine-summary">“miniket rice 5kg” · আপনার অবস্থান</span></span>
+    </summary>
+    <label for="q" class="sr-only">কী খুঁজছেন?</label>
+    <div class="query-row">
+      <input id="q" type="search" name="q" value="miniket rice 5kg" maxlength="200" required placeholder="যেমন: মিনিকেট চাল ৫ কেজি" autocomplete="off" enterkeyhint="search">
+    </div>
+
+    <fieldset class="form-section">
+      <legend>দামের উৎস</legend>
+      <div class="seg">
+        <input type="radio" id="mode-all" name="mode" value="all" checked><label for="mode-all">সব</label><input type="radio" id="mode-local" name="mode" value="local"><label for="mode-local">স্থানীয় দোকান</label><input type="radio" id="mode-online" name="mode" value="online"><label for="mode-online">অনলাইন</label><input type="radio" id="mode-estimate" name="mode" value="estimate"><label for="mode-estimate">এআই অনুমান</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section" data-where-group>
+      <legend>কোথায়</legend>
+      <div class="seg full">
+        <input type="radio" id="where-area" name="where" value="area"><label for="where-area">এলাকা দিয়ে</label>
+        <input type="radio" id="where-point" name="where" value="point" checked><label for="where-point">সঠিক অবস্থান</label>
+      </div>
+
+      <div class="where-panel" data-where="area">
+        <div class="grid two">
+          <div>
+            <label for="district">জেলা</label>
+            <select id="district" name="district" hx-get="/areas/upazilas" hx-target="#upazila" hx-trigger="change" hx-swap="innerHTML">
+              <option value="">— জেলা বেছে নিন —</option>
+              <option value="16">চট্টগ্রাম</option><option value="55">ঢাকা</option>
+            </select>
+          </div>
+          <div>
+            <label for="upazila">উপজেলা / থানা <span class="hint">(ঐচ্ছিক)</span></label>
+            <select id="upazila" name="upazila">
+              
+
+
+  <option value="">আগে জেলা বেছে নিন</option>
+
+
+            </select>
+          </div>
+        </div>
+        <p class="hint">শুধু জেলা দিলে পুরো জেলার সব দোকান দেখাবে। উপজেলা দিলে শুধু সেই উপজেলার দোকান; আর সঠিক অবস্থান দিলে আপনার চারপাশের নির্দিষ্ট দূরত্বের মধ্যে খোঁজা যাবে।</p>
+      </div>
+
+      <div class="where-panel" data-where="point">
+        <div class="actions">
+          <button class="btn secondary small" type="button" data-geolocate="picker" data-failed-text="আপনার অবস্থান পাওয়া যায়নি" hidden>আমার অবস্থান ব্যবহার করুন</button>
+          <span class="hint">মানচিত্রে চাপ দিয়ে পিন বসান, অথবা ডিভাইসের অবস্থান ব্যবহার করুন। শুধু মোটামুটি (~১ কিমি) এলাকা সংরক্ষণ করা হয়।</span>
+        </div>
+        <div id="picker" class="map" data-map data-lat="22.335109" data-lng="91.834073" data-zoom="12" data-lat-input="lat" data-lng-input="lng" data-where-input="where-point" role="application" aria-label="খোঁজার অবস্থান বাছাইয়ের মানচিত্র"></div>
+        <div class="grid two coords">
+          <div><label for="lat">অক্ষাংশ</label><input id="lat" type="text" inputmode="decimal" name="lat" value="22.335109"></div>
+          <div><label for="lng">দ্রাঘিমাংশ</label><input id="lng" type="text" inputmode="decimal" name="lng" value="91.834073"></div>
+        </div>
+        <div class="coords">
+          <label for="radius">দূরত্বের মধ্যে</label>
+          <select id="radius" name="radius">
+            <option value="1000">১.০ কিমি</option><option value="3000" selected>৩.০ কিমি</option><option value="10000">১০.০ কিমি</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-section">
+      <label for="category">বিভাগ</label>
+      <select id="category" name="category">
+        <option value="">যেকোনো বিভাগ</option>
+        <option value="2">চাল ও শস্য</option>
+      </select>
+    </div>
+    <div class="form-section"><button class="btn block big" type="submit">খুঁজুন</button></div>
+  </details>
+</form>
+
+  </aside>
+  
+  <div class="results-col">
+  
+    
+      <div class="product-head">
+        <h1>মিনিকেট চাল ৫ কেজি</h1>
+        <span class="badge demo">ডেমো</span>
+      </div>
+      <p class="product-meta">৫ কেজি</p>
+      
+        <p class="small muted" id="cands">সবচেয়ে মিল থাকা পণ্যের দাম দেখানো হচ্ছে। অন্যান্য মিল:</p>
+        <ul class="chips" aria-labelledby="cands">
+          <li><a href="/search?product=1" aria-current="true">মিনিকেট চাল ৫ কেজি</a></li><li><a href="/search?product=2">মিনিকেট চাল ১ কেজি</a></li>
+        </ul>
+      
+      <nav aria-label="দামের উৎস"><ul class="tabs">
+        <li><a href="/search?mode=all&amp;q=x" aria-current="page">সব</a></li><li><a href="/search?mode=local&amp;q=x">স্থানীয় দোকান</a></li>
+      </ul></nav>
+
+      
+      <section class="card" aria-labelledby="local-h">
+        <div class="card-head">
+          <h2 id="local-h">স্থানীয় দোকান</h2>
+          <span class="muted small">২টি দোকান</span>
+        </div>
+        
+          
+
+<div class="scope">
+  <div class="scope-text">
+    
+      আপনার অবস্থান থেকে ৩.০ কিমি-এর মধ্যের দোকান, কম দাম আগে।
+    
+  </div>
+  
+    <div class="radius-chips" role="group" aria-label="দূরত্ব:">
+      <span class="tiny muted">দূরত্ব:</span>
+      <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=1000&amp;where=point">১.০ কিমি</a><span class="cur" aria-current="true">৩.০ কিমি</span><a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=10000&amp;where=point">১০.০ কিমি</a>
+    </div>
+  
+</div>
+
+
+          
+            <ol class="results">
+            
+              <li class="result best">
+                <div>
+                  <h3><a href="/shops/3">Rahim&#39;s &#34;Best&#34; &lt;Store&gt;</a> <span class="badge demo">ডেমো</span></h3>
+                  <div class="where">12 Station Road &lt;b&gt;bold&lt;/b&gt; · চট্টগ্রাম · <strong>৮৮০ মি দূরে</strong></div>
+                  <div class="meta">
+                    <span class="badge fresh">নতুন</span>
+                    <span>হালনাগাদ ১ দিন আগে</span>
+                    
+                    
+                  </div>
+                </div>
+                <div class="side">
+                  <span class="best-tag">সবচেয়ে কম দাম</span>
+                  <span class="price">৳৪০৫</span>
+                  <a class="btn small secondary" href="https://www.openstreetmap.org/directions?to=22.340000%2C91.830000#map=16/22.34000/91.83000" rel="noopener noreferrer" target="_blank">যাওয়ার পথ</a>
+                </div>
+              </li>
+            
+              <li class="result">
+                <div>
+                  <h3><a href="/shops/4">করিম স্টোর</a> </h3>
+                  <div class="where">স্টেশন রোড · হাটহাজারী, চট্টগ্রাম · <strong>২.৪ কিমি দূরে</strong></div>
+                  <div class="meta">
+                    <span class="badge stale">পুরোনো হতে পারে</span>
+                    <span>হালনাগাদ ১২ দিন আগে</span>
+                    <span class="badge out">স্টকে নেই</span>
+                    <span class="badge review">দাম যাচাইাধীন</span>
+                  </div>
+                </div>
+                <div class="side">
+                  
+                  <span class="price">৳৪১২.৫০</span>
+                  <a class="btn small secondary" href="https://www.openstreetmap.org/directions?to=22.350000%2C91.840000#map=16/22.35000/91.84000" rel="noopener noreferrer" target="_blank">যাওয়ার পথ</a>
+                </div>
+              </li>
+            
+            </ol>
+            <p class="actions"><a class="btn secondary" href="/search?cursor=abc&amp;lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">আরও ফলাফল</a></p>
+            <div class="map" data-map data-lat="22.335109" data-lng="91.834073" data-zoom="12" data-radius="3000" data-markers="[{&#34;lat&#34;:22.34,&#34;lng&#34;:91.83,&#34;label&#34;:&#34;Rahim&#39;s \&#34;Best\&#34; \u003cStore\u003e — ৳405&#34;}]" role="application" aria-label="যেসব দোকানে পণ্যটি আছে তার মানচিত্র"></div>
+          
+        
+      </section>
+      
+
+      
+      <section class="card" aria-labelledby="online-h">
+        <div class="card-head">
+          <h2 id="online-h">অনলাইনের দাম</h2>
+          <span class="muted small">১টি অফার</span>
+        </div>
+        
+          <p class="small muted"><span class="spinner" aria-hidden="true"></span> অনলাইন শপগুলোতে নতুন দাম খোঁজা হচ্ছে… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">রিফ্রেশ করুন</a></p>
+          <div class="notice"><p>শেষবার খোঁজার সময় ১টি অনলাইন উৎসে পৌঁছানো যায়নি; সেগুলোর দাম বাদ পড়ে থাকতে পারে।</p></div>
+          
+            <ol class="results">
+            
+              <li class="result best">
+                <div>
+                  <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
+                  <div class="where"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">ডেমো</span></div>
+                  <div class="meta">
+                    <span class="badge in">স্টকে আছে</span>
+                    <span>দাম দেখা গেছে ৩ ঘণ্টা আগে</span>
+                  </div>
+                </div>
+                <div class="side">
+                  <span class="best-tag">সবচেয়ে কম দাম</span>
+                  <span class="price">৳৪৩৮</span>
+                  <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">দোকানে যান</a>
+                </div>
+              </li>
+            
+            </ol>
+            <p class="tiny muted">দাম দোকানের পণ্য-পাতা থেকে নেওয়া; এর মধ্যে বদলে থাকতে পারে। কেনার আগে দোকানের সাইটে নিশ্চিত করুন।</p>
+          
+        
+      </section>
+      
+
+      
+
+<section id="estimate" class="card estimate" aria-labelledby="estimate-h" aria-live="polite"
+  >
+  <div class="card-head">
+    <h2 id="estimate-h">এআই মূল্য অনুমান</h2>
+    <span class="muted small">এলাকা: আপনার অবস্থান</span>
+  </div>
+  
+    <div class="notice"><p>এটি একটি অনুমান, কোনো নির্ধারিত দাম নয়। স্থানীয় তথ্য থেকে তৈরি একটি পরিসর; প্রকৃত দাম এর চেয়ে বেশি বা কম হতে পারে।</p></div>
+    <p class="range">৳৩৮৯ – ৳৪২৮</p>
+    <div class="range-bar" aria-hidden="true"><span data-pos="41"></span></div>
+    <div class="range-ends" aria-hidden="true"><span>কম</span><span>বেশি</span></div>
+    <p>সম্ভাব্য দাম প্রায় <strong>৳৪০৫</strong>
+      · আস্থার মাত্রা: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">মাঝারি</span></p>
+    <div class="explain">কাছের চারটি দোকানের দাম কাছাকাছি।</div>
+    <p class="small muted">পদ্ধতি: এআই-সহায়িত (demo-model)
+      · খোঁজার ব্যাসার্ধ ৩.০ কিমি · হিসাব করা হয়েছে ১ ঘণ্টা আগে</p>
+    
+    
+
+<details>
+  <summary>ব্যবহৃত তথ্য (২টি দাম)</summary>
+  <div class="table-scroll">
+  <table class="cards">
+    <thead><tr><th scope="col">উৎস</th><th scope="col" class="num">তুলনীয় দাম</th><th scope="col" class="num">দূরত্ব</th><th scope="col" class="num">বয়স</th><th scope="col">আইডি</th></tr></thead>
+    <tbody>
+    
+      <tr><td data-label="উৎস">স্থানীয় দোকান, একই পণ্য</td><td class="num" data-label="তুলনীয় দাম">৳৪০৫</td>
+      <td class="num" data-label="দূরত্ব">৮৮০ মি</td><td class="num" data-label="বয়স">১ দিন</td><td class="tiny muted" data-label="আইডি">L11</td></tr>
+    
+      <tr><td data-label="উৎস">অনলাইন অফার</td><td class="num" data-label="তুলনীয় দাম">৳৪১৬.১০</td>
+      <td class="num" data-label="দূরত্ব">–</td><td class="num" data-label="বয়স">০ দিন</td><td class="tiny muted" data-label="আইডি">O1</td></tr>
+    
+    </tbody>
+  </table>
+  </div>
+  <p class="small muted">সামগ্রিক স্থানীয় ও অনলাইন দামের অনুপাত দিয়ে অনলাইন দাম সমন্বয় করা হয়েছে।</p>
+</details>
+
+  
+</section>
+
+
+    
+  
+  </div>
+  
+</div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>পণ্যখোঁজ সম্পূর্ণ এজেন্ট-চালিত একটি প্রকল্প: একজন মানুষের দিকনির্দেশনায় এআই কোডিং এজেন্টরা এটি তৈরি ও রক্ষণাবেক্ষণ করে।</p>
+    <p>অনলাইনের দাম দোকানগুলোর প্রকাশ্য পণ্য-পাতা থেকে (তাদের robots.txt মেনে) নেওয়া হয় এবং দোকানের লিংক দেওয়া থাকে। কেনার আগে দোকানে দাম নিশ্চিত করুন।</p>
+    <p>মানচিত্রের তথ্য: © OpenStreetMap contributors</p>
+    <p>ডেমো মোড: “ডেমো” চিহ্নিত দোকান, দাম ও অনলাইন অফারগুলো কাল্পনিক।</p>
+  </div>
+</footer>
+</body>
+</html>

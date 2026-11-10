@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Compare prices of a product online, at shops near you, and get an evidence-based estimate when no nearby shop lists it.">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Rahim Store · ponnoKhoj</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ponnoKhoj"><span class="logo-mark" aria-hidden="true">৳</span>ponnoKhoj</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/">Search</a>
+      
+        <a href="/vendor">My shops</a>
+        <a href="/admin">Admin</a>
+        <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">Log out</button></form>
+      
+      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+<div class="wrap">
+
+<h1>Rahim Store</h1>
+<p><span class="badge pending">Pending review</span>
+  <span class="muted">Waiting for review. Your prices will appear in search once the shop is verified.</span></p>
+<div class="actions card">
+  <a class="btn secondary" href="/vendor/shops/3/edit">Edit shop details</a>
+  <a class="btn secondary" href="/shops/3">View public page</a>
+  <a href="/vendor">Back to my shops</a>
+</div>
+
+
+<section class="card" aria-labelledby="bulk-result-h">
+  <h2 id="bulk-result-h">Upload result</h2>
+  
+  <p>3 prices saved. 1 of them look unusual and were marked for review.</p>
+  
+  <table>
+    <thead><tr><th scope="col">Line</th><th scope="col">Problem</th><th scope="col">Value</th></tr></thead>
+    <tbody><tr><td>4</td><td>Price could not be read</td><td>free</td></tr></tbody>
+  </table>
+  
+</section>
+
+
+<section class="card stack" aria-labelledby="add-h">
+  <h2 id="add-h">Add or update a price</h2>
+  <form method="get" action="/vendor/shops/3" class="stack">
+    <label for="pq">Find the product</label>
+    <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off"
+      hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+    <div><button class="btn secondary small" type="submit">Search</button></div>
+  </form>
+  
+
+<div id="product-options" aria-live="polite">
+  
+    
+    <ul class="results">
+    
+      <li>
+        <div>Miniket Rice 1 kg <span class="small muted">#2</span></div>
+        <form class="actions" method="post" action="/vendor/shops/3/listings">
+          <input type="hidden" name="product" value="2">
+          <label class="sr-only" for="new-price-2">Price</label>
+          <input id="new-price-2" type="text" inputmode="decimal" name="price" placeholder="Price in ৳" required class="narrow">
+          <input type="hidden" name="in_stock" value="1">
+          <button class="btn small" type="submit">Set price</button>
+        </form>
+      </li>
+    
+    </ul>
+    
+  
+</div>
+
+  <p class="small">Product not in the catalog? <a href="/vendor/products/new?shop=3">Propose a new product</a></p>
+</section>
+
+<section class="card" aria-labelledby="listings-h">
+  <h2 id="listings-h">Your prices</h2>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Updated</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td>Miniket Rice 5 kg <span class="small muted">#1</span>
+          
+          <span class="badge review">Price under review</span>
+          </td>
+        <td>
+          <form class="actions" method="post" action="/vendor/shops/3/listings">
+            <input type="hidden" name="product" value="1">
+            <label class="sr-only" for="price-11">Price</label>
+            <input id="price-11" type="text" inputmode="decimal" name="price" value="405.00" required class="narrow">
+            <label class="small"><input type="checkbox" name="in_stock" value="1" checked> In stock</label>
+            <button class="btn small" type="submit">Save</button>
+          </form>
+        </td>
+        <td>2 h ago <span class="badge fresh">Fresh</span></td>
+        <td><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">Delete</button></form></td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card stack" aria-labelledby="bulk-h">
+  <h2 id="bulk-h">Bulk update (CSV)</h2>
+  <p>Upload a CSV with the columns product_id, price and (optionally) in_stock. Up to 2000 rows. Product IDs are in the downloadable product list.</p>
+  <pre class="small">product_id,price,in_stock
+1,405,yes
+9,178.50,no</pre>
+  <form method="post" action="/vendor/shops/3/bulk" enctype="multipart/form-data" class="stack">
+    <div><label for="csv">CSV file</label><input id="csv" type="file" name="csv" accept=".csv,text/csv" required></div>
+    <div><button class="btn" type="submit">Upload</button></div>
+  </form>
+</section>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>ponnoKhoj is a fully agent-driven project: it is built and maintained by AI coding agents under a human owner&#39;s direction.</p>
+    <p>Online prices are read from the shops&#39; public product pages, following their robots.txt, and link back to the shop. Always confirm the price with the shop before buying.</p>
+    <p>Map data: © OpenStreetMap contributors</p>
+    <p>Demo mode: shops, prices and online offers marked “Demo” are fictional.</p>
+  </div>
+</footer>
+</body>
+</html>

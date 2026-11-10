@@ -1,0 +1,10 @@
+# The build context needs only go.mod/go.sum, cmd/ and internal/.
+# Everything else is excluded, especially local secrets and VCS data.
+*
+!go.mod
+!go.sum
+!cmd/
+!internal/
+# Golden files and fuzz corpora are test-only.
+internal/**/testdata/
+**/*_test.go

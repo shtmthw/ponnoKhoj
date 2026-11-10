@@ -1,0 +1,64 @@
+{{define "content"}}
+<div class="wrap">
+{{$L := .L}}{{$d := .Data}}
+<h1>{{$d.Shop.Name}} {{if $d.Shop.IsDemo}}<span class="badge demo">{{$L.T "badge.demo"}}</span>{{end}}</h1>
+<div class="card stack">
+  {{if $d.Shop.Description}}<div><h2 class="small muted">{{$L.T "shop.about"}}</h2><div class="description">{{$d.Shop.Description}}</div></div>{{end}}
+  <p>{{$d.Shop.Address}}<br><span class="muted">{{$L.Name $d.Shop.AreaEn $d.Shop.AreaBn}}{{if $d.Shop.ParentAreaEn}}, {{$L.Name $d.Shop.ParentAreaEn $d.Shop.ParentAreaBn}}{{end}}</span></p>
+  {{if $d.Shop.Phone}}<p>{{$L.T "shop.phone"}}: <a href="tel:{{$d.Shop.Phone}}">{{$d.Shop.Phone}}</a></p>{{end}}
+  {{if $d.Shop.OpeningHours}}<p>{{$L.T "shop.hours"}}: {{$d.Shop.OpeningHours}}</p>{{end}}
+  <p><a class="btn" href="{{$d.DirectionsURL}}" rel="noopener noreferrer" target="_blank">{{$L.T "local.directions"}}</a></p>
+  <div class="map" data-map data-lat="{{$d.Shop.Lat}}" data-lng="{{$d.Shop.Lng}}" data-zoom="16" data-markers="{{$d.Markers}}" role="application" aria-label="{{$L.T "shop.map_label"}}"></div>
+</div>
+<section class="card" aria-labelledby="prices-h">
+  <h2 id="prices-h">{{$L.T "shop.prices"}}</h2>
+  {{if $d.Listings}}
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col" class="num">{{$L.T "table.price"}}</th><th scope="col">{{$L.T "table.updated"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
+    <tbody>
+    {{range $d.Listings}}
+      <tr>
+        <td><a href="/search?product={{.ProductID}}&amp;mode=all">{{$L.Name .NameEn .NameBn}}</a>
+          {{if not .InStock}}<span class="badge out">{{$L.T "badge.out_of_stock"}}</span>{{end}}
+          {{if .UnderReview}}<span class="badge review">{{$L.T "badge.under_review"}}</span>{{end}}</td>
+        <td class="num"><strong>{{$L.Money .Price}}</strong></td>
+        <td>{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
+        <td>
+          <details><summary class="small">{{$L.T "report.listing"}}</summary>
+            {{template "reportform" (dict "L" $L "Target" "listing" "ID" .ID "ShopID" $d.Shop.ID)}}
+          </details>
+        </td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table></div>
+  {{else}}<p>{{$L.T "shop.no_prices"}}</p>{{end}}
+</section>
+<section class="card" aria-labelledby="report-h">
+  <h2 id="report-h">{{$L.T "report.shop"}}</h2>
+  {{template "reportform" (dict "L" $L "Target" "shop" "ID" $d.Shop.ID "ShopID" $d.Shop.ID)}}
+</section>
+</div>
+{{end}}
+
+{{define "reportform"}}
+{{$L := .L}}
+<form class="stack" method="post" action="/report">
+  <input type="hidden" name="target" value="{{.Target}}">
+  <input type="hidden" name="id" value="{{.ID}}">
+  <input type="hidden" name="shop" value="{{.ShopID}}">
+  <div>
+    <label for="reason-{{.Target}}-{{.ID}}">{{$L.T "report.reason"}}</label>
+    <select id="reason-{{.Target}}-{{.ID}}" name="reason" required>
+      <option value="wrong_price">{{$L.T "report.reason.wrong_price"}}</option>
+      <option value="closed">{{$L.T "report.reason.closed"}}</option>
+      <option value="fake">{{$L.T "report.reason.fake"}}</option>
+    </select>
+  </div>
+  <div>
+    <label for="note-{{.Target}}-{{.ID}}">{{$L.T "report.note"}} <span class="hint">{{$L.T "form.optional"}}</span></label>
+    <input id="note-{{.Target}}-{{.ID}}" type="text" name="note" maxlength="500">
+  </div>
+  <div><button class="btn secondary small" type="submit">{{$L.T "report.submit"}}</button></div>
+</form>
+{{end}}

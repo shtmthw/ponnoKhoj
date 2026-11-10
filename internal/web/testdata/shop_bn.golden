@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="অনলাইনে, আপনার কাছের দোকানে পণ্যের দাম তুলনা করুন; কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক অনুমান পান।">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Rahim Store · পণ্যখোঁজ</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">মূল অংশে যান</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="পণ্যখোঁজ"><span class="logo-mark" aria-hidden="true">৳</span>পণ্যখোঁজ</a>
+    <nav class="site-nav" aria-label="প্রধান মেনু">
+      <a href="/">খুঁজুন</a>
+      
+        <a href="/vendor/login">দোকানদারদের জন্য</a>
+      
+      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+<div class="wrap">
+
+<h1>Rahim Store <span class="badge demo">ডেমো</span></h1>
+<div class="card stack">
+  
+  <p>12 Station Road<br><span class="muted">কোতোয়ালী, চট্টগ্রাম</span></p>
+  <p>ফোন: <a href="tel:&#43;880%201700-000000">&#43;880 1700-000000</a></p>
+  <p>খোলা থাকার সময়: 9–9</p>
+  <p><a class="btn" href="https://www.openstreetmap.org/directions?to=22.340000%2C91.830000#map=16/22.34000/91.83000" rel="noopener noreferrer" target="_blank">যাওয়ার পথ</a></p>
+  <div class="map" data-map data-lat="22.34" data-lng="91.83" data-zoom="16" data-markers="[{&#34;lat&#34;:22.34,&#34;lng&#34;:91.83,&#34;label&#34;:&#34;Rahim Store&#34;}]" role="application" aria-label="দোকানের অবস্থানের মানচিত্র"></div>
+</div>
+<section class="card" aria-labelledby="prices-h">
+  <h2 id="prices-h">এই দোকানের দাম</h2>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">পণ্য</th><th scope="col" class="num">দাম</th><th scope="col">হালনাগাদ</th><th scope="col"><span class="sr-only">কাজ</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td><a href="/search?product=1&amp;mode=all">মিনিকেট চাল ৫ কেজি</a>
+          
+          </td>
+        <td class="num"><strong>৳৪০৫</strong></td>
+        <td>২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
+        <td>
+          <details><summary class="small">এই দামের বিষয়ে অভিযোগ</summary>
+            
+
+<form class="stack" method="post" action="/report">
+  <input type="hidden" name="target" value="listing">
+  <input type="hidden" name="id" value="11">
+  <input type="hidden" name="shop" value="3">
+  <div>
+    <label for="reason-listing-11">কারণ</label>
+    <select id="reason-listing-11" name="reason" required>
+      <option value="wrong_price">দাম ভুল</option>
+      <option value="closed">দোকান বন্ধ</option>
+      <option value="fake">ভুয়া মনে হচ্ছে</option>
+    </select>
+  </div>
+  <div>
+    <label for="note-listing-11">মন্তব্য <span class="hint">(ঐচ্ছিক)</span></label>
+    <input id="note-listing-11" type="text" name="note" maxlength="500">
+  </div>
+  <div><button class="btn secondary small" type="submit">অভিযোগ পাঠান</button></div>
+</form>
+
+          </details>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+<section class="card" aria-labelledby="report-h">
+  <h2 id="report-h">এই দোকানের সমস্যা জানান</h2>
+  
+
+<form class="stack" method="post" action="/report">
+  <input type="hidden" name="target" value="shop">
+  <input type="hidden" name="id" value="3">
+  <input type="hidden" name="shop" value="3">
+  <div>
+    <label for="reason-shop-3">কারণ</label>
+    <select id="reason-shop-3" name="reason" required>
+      <option value="wrong_price">দাম ভুল</option>
+      <option value="closed">দোকান বন্ধ</option>
+      <option value="fake">ভুয়া মনে হচ্ছে</option>
+    </select>
+  </div>
+  <div>
+    <label for="note-shop-3">মন্তব্য <span class="hint">(ঐচ্ছিক)</span></label>
+    <input id="note-shop-3" type="text" name="note" maxlength="500">
+  </div>
+  <div><button class="btn secondary small" type="submit">অভিযোগ পাঠান</button></div>
+</form>
+
+</section>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>পণ্যখোঁজ সম্পূর্ণ এজেন্ট-চালিত একটি প্রকল্প: একজন মানুষের দিকনির্দেশনায় এআই কোডিং এজেন্টরা এটি তৈরি ও রক্ষণাবেক্ষণ করে।</p>
+    <p>অনলাইনের দাম দোকানগুলোর প্রকাশ্য পণ্য-পাতা থেকে (তাদের robots.txt মেনে) নেওয়া হয় এবং দোকানের লিংক দেওয়া থাকে। কেনার আগে দোকানে দাম নিশ্চিত করুন।</p>
+    <p>মানচিত্রের তথ্য: © OpenStreetMap contributors</p>
+    <p>ডেমো মোড: “ডেমো” চিহ্নিত দোকান, দাম ও অনলাইন অফারগুলো কাল্পনিক।</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# PostgreSQL via CloudNativePG, with PostGIS and pg_trgm. CloudNativePG
+# creates the Secret "ponnokhoj-db-app" holding the application user's
+# connection string (key "uri"), which the workloads use as DATABASE_URL.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ponnokhoj-db
+spec:
+  instances: 1
+  # PostgreSQL 17 + PostGIS 3.6 (CNPG_POSTGIS_IMAGE in deploy/versions.env).
+  imageName: ghcr.io/cloudnative-pg/postgis:17-3.6-standard-trixie@sha256:73593f14ce3ef6f5401a9867e6bbbcd9b8814029435d8d9dd32104458e06f769
+  bootstrap:
+    initdb:
+      database: ponnokhoj
+      owner: ponnokhoj
+      # Runs once, as a superuser, in the application database. PostGIS is
+      # not a trusted extension, so the application user cannot create it;
+      # the operator cost statements mirror migration 00003, which the
+      # application user cannot run because it does not own pg_trgm.
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS postgis
+        - CREATE EXTENSION IF NOT EXISTS pg_trgm
+        - ALTER FUNCTION similarity_op(text, text) COST 100
+        - ALTER FUNCTION word_similarity_op(text, text) COST 100
+        - ALTER FUNCTION word_similarity_commutator_op(text, text) COST 100
+  storage:
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+  postgresql:
+    parameters:
+      shared_buffers: 64MB
+      max_connections: "100"

@@ -1,0 +1,41 @@
+# The worker reads the fictional demo shop that the web pods serve under
+# /demo-shop/. Only this offline CI environment needs worker -> web traffic.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: worker-egress-to-demo-shop
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+      app.kubernetes.io/component: worker
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ponnokhoj
+              app.kubernetes.io/component: web
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-ingress-from-worker
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+      app.kubernetes.io/component: web
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ponnokhoj
+              app.kubernetes.io/component: worker
+      ports:
+        - protocol: TCP
+          port: 8080

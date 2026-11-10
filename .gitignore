@@ -1,0 +1,24 @@
+# Build output
+/bin/
+/dist/
+coverage*.out
+coverage*.html
+*.test
+
+# Local environment and secrets: never commit
+.env
+.env.*
+!.env.example
+deploy/k8s/overlays/dev/.env.dev
+kubeconfig*
+*.kubeconfig
+
+# Go fuzz cache (seed corpora under testdata/fuzz are committed)
+/internal/**/testdata/fuzz/**/cache/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+/.run/

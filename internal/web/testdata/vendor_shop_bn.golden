@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="অনলাইনে, আপনার কাছের দোকানে পণ্যের দাম তুলনা করুন; কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক অনুমান পান।">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Rahim Store · পণ্যখোঁজ</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">মূল অংশে যান</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="পণ্যখোঁজ"><span class="logo-mark" aria-hidden="true">৳</span>পণ্যখোঁজ</a>
+    <nav class="site-nav" aria-label="প্রধান মেনু">
+      <a href="/">খুঁজুন</a>
+      
+        <a href="/vendor">আমার দোকান</a>
+        <a href="/admin">অ্যাডমিন</a>
+        <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">লগ আউট</button></form>
+      
+      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+<div class="wrap">
+
+<h1>Rahim Store</h1>
+<p><span class="badge pending">যাচাইয়ের অপেক্ষায়</span>
+  <span class="muted">যাচাইয়ের অপেক্ষায়। দোকান যাচাই হলে আপনার দাম খোঁজায় দেখা যাবে।</span></p>
+<div class="actions card">
+  <a class="btn secondary" href="/vendor/shops/3/edit">দোকানের তথ্য সম্পাদনা</a>
+  <a class="btn secondary" href="/shops/3">পাবলিক পেজ দেখুন</a>
+  <a href="/vendor">আমার দোকানে ফিরুন</a>
+</div>
+
+
+<section class="card" aria-labelledby="bulk-result-h">
+  <h2 id="bulk-result-h">আপলোডের ফলাফল</h2>
+  
+  <p>৩টি দাম সংরক্ষিত হয়েছে। এর মধ্যে ১টি অস্বাভাবিক মনে হওয়ায় যাচাইয়ের জন্য চিহ্নিত।</p>
+  
+  <table>
+    <thead><tr><th scope="col">লাইন</th><th scope="col">সমস্যা</th><th scope="col">মান</th></tr></thead>
+    <tbody><tr><td>৪</td><td>দাম পড়া যায়নি</td><td>free</td></tr></tbody>
+  </table>
+  
+</section>
+
+
+<section class="card stack" aria-labelledby="add-h">
+  <h2 id="add-h">দাম যোগ বা হালনাগাদ করুন</h2>
+  <form method="get" action="/vendor/shops/3" class="stack">
+    <label for="pq">পণ্য খুঁজুন</label>
+    <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off"
+      hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+    <div><button class="btn secondary small" type="submit">খুঁজুন</button></div>
+  </form>
+  
+
+<div id="product-options" aria-live="polite">
+  
+    
+    <ul class="results">
+    
+      <li>
+        <div>মিনিকেট চাল ১ কেজি <span class="small muted">#2</span></div>
+        <form class="actions" method="post" action="/vendor/shops/3/listings">
+          <input type="hidden" name="product" value="2">
+          <label class="sr-only" for="new-price-2">দাম</label>
+          <input id="new-price-2" type="text" inputmode="decimal" name="price" placeholder="দাম (৳)" required class="narrow">
+          <input type="hidden" name="in_stock" value="1">
+          <button class="btn small" type="submit">দাম দিন</button>
+        </form>
+      </li>
+    
+    </ul>
+    
+  
+</div>
+
+  <p class="small">পণ্যটি ক্যাটালগে নেই? <a href="/vendor/products/new?shop=3">নতুন পণ্য প্রস্তাব করুন</a></p>
+</section>
+
+<section class="card" aria-labelledby="listings-h">
+  <h2 id="listings-h">আপনার দেওয়া দাম</h2>
+  
+  <div class="table-scroll"><table>
+    <thead><tr><th scope="col">পণ্য</th><th scope="col">দাম</th><th scope="col">হালনাগাদ</th><th scope="col"><span class="sr-only">কাজ</span></th></tr></thead>
+    <tbody>
+    
+      <tr>
+        <td>মিনিকেট চাল ৫ কেজি <span class="small muted">#1</span>
+          
+          <span class="badge review">দাম যাচাইাধীন</span>
+          </td>
+        <td>
+          <form class="actions" method="post" action="/vendor/shops/3/listings">
+            <input type="hidden" name="product" value="1">
+            <label class="sr-only" for="price-11">দাম</label>
+            <input id="price-11" type="text" inputmode="decimal" name="price" value="405.00" required class="narrow">
+            <label class="small"><input type="checkbox" name="in_stock" value="1" checked> স্টকে আছে</label>
+            <button class="btn small" type="submit">সংরক্ষণ করুন</button>
+          </form>
+        </td>
+        <td>২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
+        <td><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">মুছুন</button></form></td>
+      </tr>
+    
+    </tbody>
+  </table></div>
+  
+</section>
+
+<section class="card stack" aria-labelledby="bulk-h">
+  <h2 id="bulk-h">একসঙ্গে অনেক দাম (CSV)</h2>
+  <p>product_id, price এবং (ঐচ্ছিক) in_stock কলামসহ একটি CSV আপলোড করুন। সর্বোচ্চ ২০০০টি সারি। পণ্যের আইডি ডাউনলোডযোগ্য পণ্য-তালিকায় আছে।</p>
+  <pre class="small">product_id,price,in_stock
+1,405,yes
+9,178.50,no</pre>
+  <form method="post" action="/vendor/shops/3/bulk" enctype="multipart/form-data" class="stack">
+    <div><label for="csv">CSV ফাইল</label><input id="csv" type="file" name="csv" accept=".csv,text/csv" required></div>
+    <div><button class="btn" type="submit">আপলোড</button></div>
+  </form>
+</section>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>পণ্যখোঁজ সম্পূর্ণ এজেন্ট-চালিত একটি প্রকল্প: একজন মানুষের দিকনির্দেশনায় এআই কোডিং এজেন্টরা এটি তৈরি ও রক্ষণাবেক্ষণ করে।</p>
+    <p>অনলাইনের দাম দোকানগুলোর প্রকাশ্য পণ্য-পাতা থেকে (তাদের robots.txt মেনে) নেওয়া হয় এবং দোকানের লিংক দেওয়া থাকে। কেনার আগে দোকানে দাম নিশ্চিত করুন।</p>
+    <p>মানচিত্রের তথ্য: © OpenStreetMap contributors</p>
+    <p>ডেমো মোড: “ডেমো” চিহ্নিত দোকান, দাম ও অনলাইন অফারগুলো কাল্পনিক।</p>
+  </div>
+</footer>
+</body>
+</html>

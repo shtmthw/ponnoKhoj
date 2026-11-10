@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ponnokhoj-web
+  labels:
+    app.kubernetes.io/name: ponnokhoj
+    app.kubernetes.io/component: web
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+      app.kubernetes.io/component: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ponnokhoj
+        app.kubernetes.io/component: web
+    spec:
+      serviceAccountName: ponnokhoj
+      automountServiceAccountToken: false
+      # Must exceed SHUTDOWN_DRAIN_DELAY + SHUTDOWN_TIMEOUT (5 s + 20 s).
+      terminationGracePeriodSeconds: 40
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: ponnokhoj
+              app.kubernetes.io/component: web
+      containers:
+        - name: web
+          image: ponnokhoj
+          imagePullPolicy: IfNotPresent
+          args: ["serve"]
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: metrics
+              containerPort: 9090
+          envFrom:
+            - configMapRef:
+                name: ponnokhoj-config
+            - secretRef:
+                name: ponnokhoj-secrets
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ponnokhoj-db-app
+                  key: uri
+            # Let the Go runtime collect garbage before the memory limit is hit.
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.memory
+          # /livez never touches the database (a DB outage must not restart
+          # pods); /readyz needs the database and the expected schema, and
+          # fails as soon as shutdown begins.
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 3
+            timeoutSeconds: 3
+            failureThreshold: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ponnokhoj-web
+  labels:
+    app.kubernetes.io/name: ponnokhoj
+    app.kubernetes.io/component: web
+spec:
+  selector:
+    app.kubernetes.io/name: ponnokhoj
+    app.kubernetes.io/component: web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+# Prometheus scrape target for every ponnoKhoj pod. Cluster-internal only:
+# no HTTPRoute points here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: ponnokhoj-metrics
+  labels:
+    app.kubernetes.io/name: ponnokhoj
+    app.kubernetes.io/component: metrics
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: ponnokhoj
+  ports:
+    - name: metrics
+      port: 9090
+      targetPort: 9090

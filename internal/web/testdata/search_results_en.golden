@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Compare prices of a product online, at shops near you, and get an evidence-based estimate when no nearby shop lists it.">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+<title>Miniket Rice 5 kg · ponnoKhoj</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.cb9e212438ef.svg">
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.HASH.css">
+<link rel="stylesheet" href="/static/app.HASH.css">
+<script src="/static/vendor/htmx/htmx.min.HASH.js" defer></script>
+<script src="/static/vendor/leaflet/leaflet.HASH.js" defer></script>
+<script src="/static/app.HASH.js" defer></script>
+</head>
+<body data-map-tiles="https://tile.openstreetmap.org/{z}/{x}/{y}.png" data-tile-attribution="© OpenStreetMap contributors">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ponnoKhoj"><span class="logo-mark" aria-hidden="true">৳</span>ponnoKhoj</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/">Search</a>
+      
+        <a href="/vendor/login">For shop owners</a>
+      
+      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  
+  
+
+
+<div class="wrap">
+<div class="layout has-results">
+  <aside>
+    
+
+<form class="card search-card" method="get" action="/search" role="search">
+  <details class="refine" data-open-desktop>
+    <summary>
+      <span>Change search
+        <span class="refine-summary">“miniket rice 5kg” · your location</span></span>
+    </summary>
+    <label for="q" class="sr-only">What are you looking for?</label>
+    <div class="query-row">
+      <input id="q" type="search" name="q" value="miniket rice 5kg" maxlength="200" required placeholder="e.g. miniket rice 5 kg" autocomplete="off" enterkeyhint="search">
+    </div>
+
+    <fieldset class="form-section">
+      <legend>Price source</legend>
+      <div class="seg">
+        <input type="radio" id="mode-all" name="mode" value="all" checked><label for="mode-all">All</label><input type="radio" id="mode-local" name="mode" value="local"><label for="mode-local">Local shops</label><input type="radio" id="mode-online" name="mode" value="online"><label for="mode-online">Online</label><input type="radio" id="mode-estimate" name="mode" value="estimate"><label for="mode-estimate">AI estimate</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section" data-where-group>
+      <legend>Where</legend>
+      <div class="seg full">
+        <input type="radio" id="where-area" name="where" value="area"><label for="where-area">By area</label>
+        <input type="radio" id="where-point" name="where" value="point" checked><label for="where-point">Exact location</label>
+      </div>
+
+      <div class="where-panel" data-where="area">
+        <div class="grid two">
+          <div>
+            <label for="district">District</label>
+            <select id="district" name="district" hx-get="/areas/upazilas" hx-target="#upazila" hx-trigger="change" hx-swap="innerHTML">
+              <option value="">— choose a district —</option>
+              <option value="16">Chattogram</option><option value="55">Dhaka</option>
+            </select>
+          </div>
+          <div>
+            <label for="upazila">Upazila / thana <span class="hint">(optional)</span></label>
+            <select id="upazila" name="upazila">
+              
+
+
+  <option value="">Choose a district first</option>
+
+
+            </select>
+          </div>
+        </div>
+        <p class="hint">With only a district you see every shop in that district. Pick an upazila to see only its shops, or use an exact location to search a radius around you.</p>
+      </div>
+
+      <div class="where-panel" data-where="point">
+        <div class="actions">
+          <button class="btn secondary small" type="button" data-geolocate="picker" data-failed-text="Could not get your location" hidden>Use my location</button>
+          <span class="hint">Tap the map to drop a pin, or use your device&#39;s location. Only a rounded (~1 km) area is ever stored.</span>
+        </div>
+        <div id="picker" class="map" data-map data-lat="22.335109" data-lng="91.834073" data-zoom="12" data-lat-input="lat" data-lng-input="lng" data-where-input="where-point" role="application" aria-label="Map for choosing a search location"></div>
+        <div class="grid two coords">
+          <div><label for="lat">Latitude</label><input id="lat" type="text" inputmode="decimal" name="lat" value="22.335109"></div>
+          <div><label for="lng">Longitude</label><input id="lng" type="text" inputmode="decimal" name="lng" value="91.834073"></div>
+        </div>
+        <div class="coords">
+          <label for="radius">Within</label>
+          <select id="radius" name="radius">
+            <option value="1000">1.0 km</option><option value="3000" selected>3.0 km</option><option value="10000">10.0 km</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-section">
+      <label for="category">Category</label>
+      <select id="category" name="category">
+        <option value="">Any category</option>
+        <option value="2">Rice &amp; Grains</option>
+      </select>
+    </div>
+    <div class="form-section"><button class="btn block big" type="submit">Search</button></div>
+  </details>
+</form>
+
+  </aside>
+  
+  <div class="results-col">
+  
+    
+      <div class="product-head">
+        <h1>Miniket Rice 5 kg</h1>
+        <span class="badge demo">Demo</span>
+      </div>
+      <p class="product-meta">5 kg</p>
+      
+        <p class="small muted" id="cands">Showing prices for the best match. Other matches:</p>
+        <ul class="chips" aria-labelledby="cands">
+          <li><a href="/search?product=1" aria-current="true">Miniket Rice 5 kg</a></li><li><a href="/search?product=2">Miniket Rice 1 kg</a></li>
+        </ul>
+      
+      <nav aria-label="Price source"><ul class="tabs">
+        <li><a href="/search?mode=all&amp;q=x" aria-current="page">All</a></li><li><a href="/search?mode=local&amp;q=x">Local shops</a></li>
+      </ul></nav>
+
+      
+      <section class="card" aria-labelledby="local-h">
+        <div class="card-head">
+          <h2 id="local-h">Local shops</h2>
+          <span class="muted small">2 shops</span>
+        </div>
+        
+          
+
+<div class="scope">
+  <div class="scope-text">
+    
+      Shops within 3.0 km of your location, cheapest first.
+    
+  </div>
+  
+    <div class="radius-chips" role="group" aria-label="Radius:">
+      <span class="tiny muted">Radius:</span>
+      <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=1000&amp;where=point">1.0 km</a><span class="cur" aria-current="true">3.0 km</span><a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=10000&amp;where=point">10.0 km</a>
+    </div>
+  
+</div>
+
+
+          
+            <ol class="results">
+            
+              <li class="result best">
+                <div>
+                  <h3><a href="/shops/3">Rahim&#39;s &#34;Best&#34; &lt;Store&gt;</a> <span class="badge demo">Demo</span></h3>
+                  <div class="where">12 Station Road &lt;b&gt;bold&lt;/b&gt; · Chattogram · <strong>880 m away</strong></div>
+                  <div class="meta">
+                    <span class="badge fresh">Fresh</span>
+                    <span>updated 1 d ago</span>
+                    
+                    
+                  </div>
+                </div>
+                <div class="side">
+                  <span class="best-tag">Lowest price</span>
+                  <span class="price">৳405</span>
+                  <a class="btn small secondary" href="https://www.openstreetmap.org/directions?to=22.340000%2C91.830000#map=16/22.34000/91.83000" rel="noopener noreferrer" target="_blank">Directions</a>
+                </div>
+              </li>
+            
+              <li class="result">
+                <div>
+                  <h3><a href="/shops/4">করিম স্টোর</a> </h3>
+                  <div class="where">স্টেশন রোড · Hathazari, Chattogram · <strong>2.4 km away</strong></div>
+                  <div class="meta">
+                    <span class="badge stale">May be outdated</span>
+                    <span>updated 12 d ago</span>
+                    <span class="badge out">Out of stock</span>
+                    <span class="badge review">Price under review</span>
+                  </div>
+                </div>
+                <div class="side">
+                  
+                  <span class="price">৳412.50</span>
+                  <a class="btn small secondary" href="https://www.openstreetmap.org/directions?to=22.350000%2C91.840000#map=16/22.35000/91.84000" rel="noopener noreferrer" target="_blank">Directions</a>
+                </div>
+              </li>
+            
+            </ol>
+            <p class="actions"><a class="btn secondary" href="/search?cursor=abc&amp;lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">More results</a></p>
+            <div class="map" data-map data-lat="22.335109" data-lng="91.834073" data-zoom="12" data-radius="3000" data-markers="[{&#34;lat&#34;:22.34,&#34;lng&#34;:91.83,&#34;label&#34;:&#34;Rahim&#39;s \&#34;Best\&#34; \u003cStore\u003e — ৳405&#34;}]" role="application" aria-label="Map of shops listing this product"></div>
+          
+        
+      </section>
+      
+
+      
+      <section class="card" aria-labelledby="online-h">
+        <div class="card-head">
+          <h2 id="online-h">Online prices</h2>
+          <span class="muted small">1 offers</span>
+        </div>
+        
+          <p class="small muted"><span class="spinner" aria-hidden="true"></span> Checking online shops for newer prices… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">Refresh</a></p>
+          <div class="notice"><p>1 online source(s) could not be reached on the last check; their prices may be missing.</p></div>
+          
+            <ol class="results">
+            
+              <li class="result best">
+                <div>
+                  <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
+                  <div class="where"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">Demo</span></div>
+                  <div class="meta">
+                    <span class="badge in">In stock</span>
+                    <span>price seen 3 h ago</span>
+                  </div>
+                </div>
+                <div class="side">
+                  <span class="best-tag">Lowest price</span>
+                  <span class="price">৳438</span>
+                  <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Visit shop</a>
+                </div>
+              </li>
+            
+            </ol>
+            <p class="tiny muted">Prices are read from each shop&#39;s product page and may have changed since. Confirm on the shop&#39;s site before buying.</p>
+          
+        
+      </section>
+      
+
+      
+
+<section id="estimate" class="card estimate" aria-labelledby="estimate-h" aria-live="polite"
+  >
+  <div class="card-head">
+    <h2 id="estimate-h">AI price estimate</h2>
+    <span class="muted small">for your location</span>
+  </div>
+  
+    <div class="notice"><p>This is an estimate, not a quoted price. It is a range built from local evidence, and the real price may be higher or lower.</p></div>
+    <p class="range">৳389 – ৳428</p>
+    <div class="range-bar" aria-hidden="true"><span data-pos="41"></span></div>
+    <div class="range-ends" aria-hidden="true"><span>low</span><span>high</span></div>
+    <p>Most likely around <strong>৳405</strong>
+      · Confidence: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">Medium</span></p>
+    <div class="explain">Four nearby shops agree closely. &lt;script&gt;alert(1)&lt;/script&gt;</div>
+    <p class="small muted">Method: AI-assisted (demo-model)
+      · search radius 3.0 km · computed 1 h ago</p>
+    
+    
+
+<details>
+  <summary>Evidence used (2 price points)</summary>
+  <div class="table-scroll">
+  <table class="cards">
+    <thead><tr><th scope="col">Source</th><th scope="col" class="num">Comparable price</th><th scope="col" class="num">Distance</th><th scope="col" class="num">Age</th><th scope="col">ID</th></tr></thead>
+    <tbody>
+    
+      <tr><td data-label="Source">Local shop, same product</td><td class="num" data-label="Comparable price">৳405</td>
+      <td class="num" data-label="Distance">880 m</td><td class="num" data-label="Age">1 d</td><td class="tiny muted" data-label="ID">L11</td></tr>
+    
+      <tr><td data-label="Source">Online offer</td><td class="num" data-label="Comparable price">৳416.10</td>
+      <td class="num" data-label="Distance">–</td><td class="num" data-label="Age">0 d</td><td class="tiny muted" data-label="ID">O1</td></tr>
+    
+    </tbody>
+  </table>
+  </div>
+  <p class="small muted">Online prices were adjusted using the overall local-to-online price ratio.</p>
+</details>
+
+  
+</section>
+
+
+    
+  
+  </div>
+  
+</div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>ponnoKhoj is a fully agent-driven project: it is built and maintained by AI coding agents under a human owner&#39;s direction.</p>
+    <p>Online prices are read from the shops&#39; public product pages, following their robots.txt, and link back to the shop. Always confirm the price with the shop before buying.</p>
+    <p>Map data: © OpenStreetMap contributors</p>
+    <p>Demo mode: shops, prices and online offers marked “Demo” are fictional.</p>
+  </div>
+</footer>
+</body>
+</html>

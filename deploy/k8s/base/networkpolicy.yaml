@@ -1,0 +1,180 @@
+# Default deny, then allow exactly the flows ponnoKhoj needs:
+#   gateway -> web (8080)          web/worker/migrate -> postgres (5432)
+#   prometheus -> metrics (9090)   worker -> internet (443) for sources/LLM
+#   DNS for everyone               CloudNativePG operator <-> instances
+# Namespace names of the gateway controller (envoy-gateway-system), the
+# operator (cnpg-system) and Prometheus (monitoring) are the documented
+# defaults; overlays patch them if a cluster differs.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress", "Egress"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-ingress-from-gateway
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+      app.kubernetes.io/component: web
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: metrics-ingress-from-prometheus
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: app-egress-to-postgres
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: ponnokhoj-db
+      ports:
+        - protocol: TCP
+          port: 5432
+---
+# Online sources and the LLM endpoint are on the public internet. Private
+# and link-local ranges are excluded, so the worker cannot be used to reach
+# cluster-internal services or a cloud metadata endpoint (SSRF hygiene).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: worker-egress-https
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ponnokhoj
+      app.kubernetes.io/component: worker
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", "100.64.0.0/10"]
+        - ipBlock:
+            cidr: ::/0
+            except: ["fc00::/7", "fe80::/10"]
+      ports:
+        - protocol: TCP
+          port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: ponnokhoj-db
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ponnokhoj
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Replication and the instance manager between instances.
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: ponnokhoj-db
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 8000
+    # The CloudNativePG operator polls the instance manager.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+      ports:
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-egress
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: ponnokhoj-db
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: ponnokhoj-db
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 8000
+    # The instance manager talks to the Kubernetes API (443 via the service
+    # VIP, 6443 on the endpoint); backups go to object storage over 443.
+    - ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443

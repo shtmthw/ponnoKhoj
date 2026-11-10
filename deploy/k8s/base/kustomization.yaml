@@ -1,0 +1,39 @@
+# ponnoKhoj base: everything every environment runs. Overlays (dev, prod)
+# set the image, replica counts, hostnames, issuers and secrets.
+#
+# Deploy order matters and is scripted in tools/devctl (`devctl deploy`):
+#   1. everything except the Deployments and the Job (namespace, config,
+#      database, network policy, gateway)  -> wait for the database
+#   2. the migration Job (named after the image tag) -> wait for completion
+#   3. the Deployments                       -> wait for the rollout
+# Migrations never run on application startup.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ponnokhoj
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: ponnokhoj
+    includeSelectors: false
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - postgres.yaml
+  - web.yaml
+  - worker.yaml
+  - migrate-job.yaml
+  - pdb.yaml
+  - networkpolicy.yaml
+  - gateway.yaml
+
+configMapGenerator:
+  - name: ponnokhoj-config
+    envs:
+      - config.env
+
+images:
+  - name: ponnokhoj
+    newName: ponnokhoj
+    newTag: dev

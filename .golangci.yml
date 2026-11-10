@@ -1,0 +1,60 @@
+# golangci-lint v2 configuration. The linter set is deliberate: each one
+# catches a class of bug this codebase is exposed to. Do not disable a linter
+# or add a //nolint without a written reason on the same line (nolintlint
+# enforces that); propose changes in an ADR instead.
+version: "2"
+
+run:
+  timeout: 5m
+  build-tags:
+    - integration
+
+linters:
+  default: none
+  enable:
+    - bodyclose       # unclosed HTTP response bodies (fetch client, LLM client)
+    - contextcheck    # functions that drop the caller's context
+    - copyloopvar
+    - durationcheck   # time.Duration multiplied by time.Duration
+    - errcheck
+    - errorlint       # error comparisons that break with wrapping
+    - gosec           # security: SQL, file paths, crypto, HTTP timeouts
+    - govet
+    - ineffassign
+    - misspell
+    - nilerr          # returning nil error after checking err != nil
+    - noctx           # HTTP requests without a context
+    - nolintlint      # every //nolint must be specific and explained
+    - rowserrcheck    # unchecked rows.Err()
+    - sqlclosecheck   # unclosed sql rows/statements
+    - staticcheck
+    - unconvert
+    - unused
+    - usestdlibvars
+  settings:
+    errcheck:
+      check-type-assertions: true
+    gosec:
+      excludes:
+        - G104 # duplicate of errcheck
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+    staticcheck:
+      checks: ["all", "-ST1000", "-ST1003"]
+  exclusions:
+    generated: strict  # sqlc output (internal/store/db) carries the generated header
+    rules:
+      # Tests may use fixed fixture paths, unchecked test-server writes and
+      # deliberately weak randomness.
+      - path: _test\.go
+        linters: [gosec, errcheck, noctx, bodyclose]
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/shtmthw/ponnoKhoj
