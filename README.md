@@ -1,14 +1,13 @@
 # ponnoKhoj (পণ্যখোঁজ)
 
 [![CI](https://github.com/shtmthw/ponnoKhoj/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shtmthw/ponnoKhoj/actions/workflows/ci.yml)
-[![Go version](https://img.shields.io/github/go-mod/go-version/shtmthw/ponnoKhoj)](go.mod)
 [![Docker Hub](https://img.shields.io/docker/v/matthew552/ponnokhoj?label=docker%20hub)](https://hub.docker.com/r/matthew552/ponnokhoj)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-> ## 🤖 Fully Agent-Driven Project
+> ## Human-Agent Driven Project
 >
-> ponnoKhoj is planned, architected, implemented, tested, containerized and maintained by **AI coding agents**.
-> The human owner, Matt ([@shtmthw](https://github.com/shtmthw)), provides product direction, reviews the work and holds the credentials.
+> ponnoKhoj is planned by me, architected by me, implemented, tested, containerized and maintained by **AI coding agents**.
+> The human owner, I Matthew, provide product direction, reviews the work and holds the credentials.
 > Every significant decision the agents made is recorded in [`docs/adr/`](docs/adr/), and their progress, evidence and known gaps in [`docs/PROGRESS.md`](docs/PROGRESS.md).
 
 ## What is ponnoKhoj?

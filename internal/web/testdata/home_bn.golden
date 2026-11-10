@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0b6e4f">
 <meta name="description" content="অনলাইনে, আপনার কাছের দোকানে পণ্যের দাম তুলনা করুন; কাছের কোনো দোকানে দাম না থাকলে তথ্যভিত্তিক অনুমান পান।">
 <meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
 <title>সেরা দাম খুঁজুন · পণ্যখোঁজ</title>
