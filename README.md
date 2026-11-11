@@ -21,19 +21,42 @@ Online prices are often inflated, and most local shops don't sell online at all.
 | **Online** | Public product pages of online shops ([Star Tech](https://www.startech.com.bd), [Tech Land BD](https://www.techlandbd.com)) |
 | **AI estimate** | When nobody nearby lists a price: a price **range** built from real evidence (nearby, online and past prices) |
 
-Search by district, by upazila, or by an exact location with a radius. The site works in Bangla and English, on phones first,
-and without JavaScript.
+Search by district, by upazila, or by an exact location with a radius. The site works in Bangla and English, and without
+JavaScript.
+
+📱 **Fully mobile friendly.** The site is built for phones first, and every page works on a small screen. The screenshots below
+are desktop-sized only so they're easier to read here.
 
 AI estimates are ranges, not quotes, and the real price may be higher or lower. If there isn't enough evidence, you get no
 estimate rather than a guess. See [`docs/estimation.md`](docs/estimation.md).
 
 ## Screenshots
 
-| Local shops, cheapest first | Online prices |
-|---|---|
-| ![Local shop results](docs/screenshots/local-shops.png) | ![Online price results](docs/screenshots/online-prices.png) |
+**AI price estimate.** No shop in Narayanganj lists this rice, so the AI builds a price range from nearby evidence. It shows
+its confidence, a plain-language explanation, the model used and every piece of evidence it relied on.
 
-<p align="center"><img src="docs/screenshots/mobile-bangla.png" alt="Mobile view in Bangla" width="300"></p>
+![AI price estimate with evidence](docs/screenshots/ai-estimate.png)
+
+| The same estimate in Bangla | Local shops, cheapest first |
+|---|---|
+| ![AI price estimate in Bangla](docs/screenshots/ai-estimate-bangla.png) | ![Local shop results](docs/screenshots/local-shops.png) |
+
+| Online prices from real shops | Shop page with map and price list |
+|---|---|
+| ![Online price results](docs/screenshots/online-prices.png) | ![Shop page](docs/screenshots/shop.png) |
+
+**Every source at once, by exact location.** Drop a pin, pick a radius, and see nearby shops (with distances and a map), online
+prices and the AI estimate together.
+
+![All sources around an exact location](docs/screenshots/all-sources-map.png)
+
+| Shop owner: my shops | Shop owner: managing prices |
+|---|---|
+| ![Vendor dashboard](docs/screenshots/vendor-dashboard.png) | ![Vendor price management](docs/screenshots/vendor-prices.png) |
+
+**Admin review:** shop verification, reports, proposed products, unusual prices and the health of each online source.
+
+![Admin review page](docs/screenshots/admin.png)
 
 ## Run it
 
