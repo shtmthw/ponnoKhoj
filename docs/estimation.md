@@ -61,7 +61,7 @@ baseline meets the committed thresholds
 The LLM path is not run in CI. CI never calls a model; unit tests replay recorded responses, including hallucinated evidence IDs and out-of-envelope values, which validation must reject. Manual checks:
 
 - `make llm-live` runs the estimator against the configured `LLM_BASE_URL` / `LLM_MODEL`.
-- The kind deployment uses OpenRouter's free `nvidia/nemotron-3-ultra-550b-a55b:free` ([ADR 0014](adr/0014-llm-openrouter.md)).
+- The kind deployment uses OpenRouter's free `nvidia/nemotron-3.5-super-vl:free` ([ADR 0014](adr/0014-llm-openrouter.md)).
 
 Recorded run, 2026-11-10, on kind:
 
@@ -69,7 +69,14 @@ Recorded run, 2026-11-10, on kind:
 |---|---|---|---|---|
 | Nazirshail Rice 5 kg | Chattogram district | ৳440 – ৳490, point ৳465 | `llm_assisted`; cited L186, L206, L224, L246; explanations in English and Bangla, amounts in taka | ~43 s |
 
+Recorded run, 2026-11-12, on kind, with `nvidia/nemotron-3.5-super-vl:free`:
+
+| Product | Place | Result | Method | Time |
+|---|---|---|---|---|
+| Nazirshail Rice 5 kg | Narayanganj district | ৳450 – ৳481, point ৳464 | `llm_assisted`; cited L452, L476, L500; explanations in English and Bangla | ~63 s |
+
 Models tried and rejected:
+- `nvidia/nemotron-3-ultra-550b-a55b:free`: the dev default until 2026-11-12, when its provider began returning empty answers with garbled text; every estimate fell back to the statistical baseline.
 - `google/gemma-4-31b-it:free`: rate-limited (HTTP 429) on most calls.
 - `nemotron-3.5-lightning`: put Chinese characters ("之间") into the Bangla explanation. This led to the Bangla/CJK validation rule.
 
