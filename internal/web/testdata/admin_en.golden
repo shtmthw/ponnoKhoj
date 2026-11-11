@@ -163,7 +163,7 @@
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <p>ponnoKhoj is a fully agent-driven project: it is built and maintained by AI coding agents under a human owner&#39;s direction.</p>
+    <p>ponnoKhoj is a human &#43; AI agents project, built by Matthew (anon14none) together with AI coding agents.</p>
     <p>Online prices are read from the shops&#39; public product pages, following their robots.txt, and link back to the shop. Always confirm the price with the shop before buying.</p>
     <p>Map data: © OpenStreetMap contributors</p>
     <p>Demo mode: shops, prices and online offers marked “Demo” are fictional.</p>

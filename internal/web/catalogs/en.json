@@ -136,7 +136,7 @@
  "flash.report_duplicate": "You have already reported this.",
  "flash.report_thanks": "Thank you. Your report was recorded.",
  "flash.shop_saved": "Shop saved.",
- "footer.agent": "ponnoKhoj is a fully agent-driven project: it is built and maintained by AI coding agents under a human owner's direction.",
+ "footer.agent": "ponnoKhoj is a human + AI agents project, built by Matthew (anon14none) together with AI coding agents.",
  "footer.demo": "Demo mode: shops, prices and online offers marked “Demo” are fictional.",
  "footer.map": "Map data:",
  "footer.online": "Online prices are read from the shops' public product pages, following their robots.txt, and link back to the shop. Always confirm the price with the shop before buying.",

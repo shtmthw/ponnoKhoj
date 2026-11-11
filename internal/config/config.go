@@ -77,7 +77,7 @@ type Config struct {
 	WorkerConcurrency int
 }
 
-// Var documents one environment variable. The README's configuration table is
+// Var documents one environment variable. The table in docs/configuration.md is
 // checked against Vars by a test, so the two cannot drift.
 type Var struct {
 	Name        string
@@ -407,9 +407,9 @@ func (c Config) Redacted(lookup LookupFunc) []string {
 	return out
 }
 
-// MarkdownTable renders Vars as the README's configuration reference. The
-// README test compares the two, so the table cannot drift from the code
-// (regenerate: PONNOKHOJ_UPDATE_README=1 go test ./internal/config -run Readme).
+// MarkdownTable renders Vars as the configuration reference in
+// docs/configuration.md. A test compares the two, so the table cannot drift from the code
+// (regenerate: PONNOKHOJ_UPDATE_CONFIG_DOC=1 go test ./internal/config -run ConfigDoc).
 func MarkdownTable() string {
 	var b strings.Builder
 	b.WriteString("| Variable | Default | Description |\n|---|---|---|\n")

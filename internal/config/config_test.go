@@ -192,35 +192,35 @@ func TestVarsAreWellFormed(t *testing.T) {
 	}
 }
 
-// TestReadmeConfigTableMatchesVars keeps the README's configuration
-// reference from drifting: every variable must appear in the table with its
+// TestConfigDocTableMatchesVars keeps the configuration reference in
+// docs/configuration.md from drifting: every variable must appear in the table with its
 // default, and the table must not document variables that do not exist.
-func TestReadmeConfigTableMatchesVars(t *testing.T) {
+func TestConfigDocTableMatchesVars(t *testing.T) {
 	t.Parallel()
-	readme, err := os.ReadFile("../../README.md")
+	doc, err := os.ReadFile("../../docs/configuration.md")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if os.Getenv("PONNOKHOJ_UPDATE_README") == "1" {
+	if os.Getenv("PONNOKHOJ_UPDATE_CONFIG_DOC") == "1" {
 		const start, end = "<!-- config-table:start -->", "<!-- config-table:end -->"
-		i, j := strings.Index(string(readme), start), strings.Index(string(readme), end)
+		i, j := strings.Index(string(doc), start), strings.Index(string(doc), end)
 		if i < 0 || j < i {
-			t.Fatal("README has no config-table markers")
+			t.Fatal("docs/configuration.md has no config-table markers")
 		}
-		readme = []byte(string(readme[:i+len(start)]) + "\n" + MarkdownTable() + string(readme[j:]))
-		if err := os.WriteFile("../../README.md", readme, 0o644); err != nil {
+		doc = []byte(string(doc[:i+len(start)]) + "\n" + MarkdownTable() + string(doc[j:]))
+		if err := os.WriteFile("../../docs/configuration.md", doc, 0o644); err != nil {
 			t.Fatal(err)
 		}
 	}
 	rowRe := regexp.MustCompile("(?m)^\\| `([A-Z][A-Z0-9_]+)` \\| (.*?) \\| (.*) \\|$")
 	rows := map[string][]string{}
-	for _, m := range rowRe.FindAllStringSubmatch(string(readme), -1) {
+	for _, m := range rowRe.FindAllStringSubmatch(string(doc), -1) {
 		rows[m[1]] = m[2:]
 	}
 	for _, v := range Vars {
 		row, ok := rows[v.Name]
 		if !ok {
-			t.Errorf("README configuration table has no row for %s", v.Name)
+			t.Errorf("docs/configuration.md has no row for %s", v.Name)
 			continue
 		}
 		wantDefault := "`" + v.Default + "`"
@@ -231,14 +231,14 @@ func TestReadmeConfigTableMatchesVars(t *testing.T) {
 			wantDefault = "—"
 		}
 		if row[0] != wantDefault {
-			t.Errorf("README default for %s is %q, want %q", v.Name, row[0], wantDefault)
+			t.Errorf("docs/configuration.md default for %s is %q, want %q", v.Name, row[0], wantDefault)
 		}
 		if row[1] != v.Description {
-			t.Errorf("README description for %s differs from config.Vars:\n  readme: %s\n  code:   %s", v.Name, row[1], v.Description)
+			t.Errorf("docs/configuration.md description for %s differs from config.Vars:\n  doc:    %s\n  code:   %s", v.Name, row[1], v.Description)
 		}
 		delete(rows, v.Name)
 	}
 	for name := range rows {
-		t.Errorf("README documents %s, which the config package does not read", name)
+		t.Errorf("docs/configuration.md documents %s, which the config package does not read", name)
 	}
 }
