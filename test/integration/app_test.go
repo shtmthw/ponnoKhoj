@@ -666,7 +666,7 @@ func TestHTMLFlowEndToEnd(t *testing.T) {
 	if !strings.Contains(body, "Karim General Store") || !strings.Contains(body, "৳135.50") || !strings.Contains(body, "45 Market Road") || !strings.Contains(body, "Directions") {
 		t.Errorf("verified shop's listing not shown within the radius")
 	}
-	if !strings.Contains(body, "Shops within 3.0 km of your location") || !strings.Contains(body, "1 shops") {
+	if !strings.Contains(body, "Shops within 3.0 km of your location") || !strings.Contains(body, "1 shop</span>") {
 		t.Errorf("result scope summary missing")
 	}
 	// ...and not outside it (the shop is 1 km away; search 500 m, and from
