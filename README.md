@@ -18,19 +18,25 @@ Online prices are often inflated, and most local shops don't sell online at all.
 | Mode | Where the price comes from |
 |---|---|
 | **Local shops** | Prices shop owners list themselves (no online store needed), with address, map and directions |
-| **Online** | Public product pages of online shops ([Star Tech](https://www.startech.com.bd), [Tech Land BD](https://www.techlandbd.com)) |
+| **Online** | Public product pages of online shops ([Star Tech](https://www.startech.com.bd), [Tech Land BD](https://www.techlandbd.com)), refreshed in the background: the panel updates itself when fresh prices arrive, no reload needed |
 | **AI estimate** | When nobody nearby lists a price: a price **range** built from real evidence (nearby, online and past prices) |
 
 Search by district, by upazila, or by an exact location with a radius. The site works in Bangla and English, and without
 JavaScript.
 
-📱 **Fully mobile friendly.** The site is built for phones first, and every page works on a small screen. The screenshots below
-are desktop-sized only so they're easier to read here.
+📱 **Built for phones first.** Results read as one clean list, the search form folds away once you've searched, and vendor
+and admin tables turn into compact rows on a small screen. Light and dark themes follow the phone's setting.
+
+| Home | Local shops, cheapest first | AI estimate in Bangla, dark theme |
+|---|---|---|
+| ![Home page on a phone](docs/screenshots/phone-home.png) | ![Local shop results on a phone](docs/screenshots/phone-results.png) | ![AI estimate in Bangla on a phone, dark theme](docs/screenshots/phone-estimate-bangla.png) |
 
 AI estimates are ranges, not quotes, and the real price may be higher or lower. If there isn't enough evidence, you get no
 estimate rather than a guess. See [`docs/estimation.md`](docs/estimation.md).
 
 ## Screenshots
+
+The screenshots below are desktop-sized so they're easier to read here.
 
 **AI price estimate.** No shop in Narayanganj lists this rice, so the AI builds a price range from nearby evidence. It shows
 its confidence, a plain-language explanation, the model used and every piece of evidence it relied on.
