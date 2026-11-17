@@ -25,8 +25,8 @@
       
         <a href="/vendor/login">দোকানদারদের জন্য</a>
       
-      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
     </nav>
+    <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
   </div>
 </header>
 <main id="main">
@@ -40,12 +40,14 @@
     
 
 <form class="card search-card" method="get" action="/search" role="search">
+  
   <details class="refine" data-open-desktop>
     <summary>
       <span>খোঁজ বদলান
         <span class="refine-summary">“miniket rice 5kg” · আপনার অবস্থান</span></span>
     </summary>
     <label for="q" class="sr-only">কী খুঁজছেন?</label>
+  
     <div class="query-row">
       <input id="q" type="search" name="q" value="miniket rice 5kg" maxlength="200" required placeholder="যেমন: মিনিকেট চাল ৫ কেজি" autocomplete="off" enterkeyhint="search">
     </div>
@@ -210,39 +212,43 @@
       
 
       
-      <section class="card" aria-labelledby="online-h">
-        <div class="card-head">
-          <h2 id="online-h">অনলাইনের দাম</h2>
-          <span class="muted small">১টি অফার</span>
-        </div>
-        
-          <p class="small muted"><span class="spinner" aria-hidden="true"></span> অনলাইন শপগুলোতে নতুন দাম খোঁজা হচ্ছে… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">রিফ্রেশ করুন</a></p>
-          <div class="notice"><p>শেষবার খোঁজার সময় ১টি অনলাইন উৎসে পৌঁছানো যায়নি; সেগুলোর দাম বাদ পড়ে থাকতে পারে।</p></div>
-          
-            <ol class="results">
-            
-              <li class="result best">
-                <div>
-                  <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
-                  <div class="where"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">ডেমো</span></div>
-                  <div class="meta">
-                    <span class="badge in">স্টকে আছে</span>
-                    <span>দাম দেখা গেছে ৩ ঘণ্টা আগে</span>
-                  </div>
-                </div>
-                <div class="side">
-                  <span class="best-tag">সবচেয়ে কম দাম</span>
-                  <span class="price">৳৪৩৮</span>
-                  <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">দোকানে যান</a>
-                </div>
-              </li>
-            
-            </ol>
-            <p class="tiny muted">দাম দোকানের পণ্য-পাতা থেকে নেওয়া; এর মধ্যে বদলে থাকতে পারে। কেনার আগে দোকানের সাইটে নিশ্চিত করুন।</p>
-          
-        
-      </section>
+
+<section id="online" class="card" aria-labelledby="online-h" aria-live="polite"
+  hx-get="/online?back=%2Fsearch%3Flat%3D22.335109%26lng%3D91.834073%26mode%3Dall%26q%3Dminiket%2Brice%2B5kg%26radius%3D3000%26where%3Dpoint&amp;n=1&amp;product=1" hx-trigger="every 3s" hx-swap="outerHTML">
+  <div class="card-head">
+    <h2 id="online-h">অনলাইনের দাম</h2>
+    <span class="muted small">১টি অফার</span>
+  </div>
+  
+    <p class="small muted"><span class="spinner" aria-hidden="true"></span> অনলাইন শপগুলোতে নতুন দাম খোঁজা হচ্ছে… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">রিফ্রেশ করুন</a></p>
+    
+    <div class="notice"><p>শেষবার খোঁজার সময় ১টি অনলাইন উৎসে পৌঁছানো যায়নি; সেগুলোর দাম বাদ পড়ে থাকতে পারে।</p></div>
+    
+      <ol class="results">
       
+        <li class="result best">
+          <div>
+            <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
+            <div class="where source"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">ডেমো</span></div>
+            <div class="meta">
+              <span class="badge in">স্টকে আছে</span>
+              <span>দাম দেখা গেছে ৩ ঘণ্টা আগে</span>
+            </div>
+          </div>
+          <div class="side">
+            <span class="best-tag">সবচেয়ে কম দাম</span>
+            <span class="price">৳৪৩৮</span>
+            <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">দোকানে যান</a>
+          </div>
+        </li>
+      
+      </ol>
+      <p class="tiny muted">দাম দোকানের পণ্য-পাতা থেকে নেওয়া; এর মধ্যে বদলে থাকতে পারে। কেনার আগে দোকানের সাইটে নিশ্চিত করুন।</p>
+    
+  
+</section>
+
+
 
       
 
@@ -257,8 +263,8 @@
     <p class="range">৳৩৮৯ – ৳৪২৮</p>
     <div class="range-bar" aria-hidden="true"><span data-pos="41"></span></div>
     <div class="range-ends" aria-hidden="true"><span>কম</span><span>বেশি</span></div>
-    <p>সম্ভাব্য দাম প্রায় <strong>৳৪০৫</strong>
-      · আস্থার মাত্রা: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">মাঝারি</span></p>
+    <p class="likely"><span>সম্ভাব্য দাম প্রায় <strong>৳৪০৫</strong></span>
+      <span class="confidence">আস্থার মাত্রা: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">মাঝারি</span></span></p>
     <div class="explain">কাছের চারটি দোকানের দাম কাছাকাছি।</div>
     <p class="small muted">পদ্ধতি: এআই-সহায়িত (demo-model)
       · খোঁজার ব্যাসার্ধ ৩.০ কিমি · হিসাব করা হয়েছে ১ ঘণ্টা আগে</p>
@@ -272,10 +278,10 @@
     <thead><tr><th scope="col">উৎস</th><th scope="col" class="num">তুলনীয় দাম</th><th scope="col" class="num">দূরত্ব</th><th scope="col" class="num">বয়স</th><th scope="col">আইডি</th></tr></thead>
     <tbody>
     
-      <tr><td data-label="উৎস">স্থানীয় দোকান, একই পণ্য</td><td class="num" data-label="তুলনীয় দাম">৳৪০৫</td>
+      <tr><td class="lead">স্থানীয় দোকান, একই পণ্য</td><td class="num end"><strong>৳৪০৫</strong></td>
       <td class="num" data-label="দূরত্ব">৮৮০ মি</td><td class="num" data-label="বয়স">১ দিন</td><td class="tiny muted" data-label="আইডি">L11</td></tr>
     
-      <tr><td data-label="উৎস">অনলাইন অফার</td><td class="num" data-label="তুলনীয় দাম">৳৪১৬.১০</td>
+      <tr><td class="lead">অনলাইন অফার</td><td class="num end"><strong>৳৪১৬.১০</strong></td>
       <td class="num" data-label="দূরত্ব">–</td><td class="num" data-label="বয়স">০ দিন</td><td class="tiny muted" data-label="আইডি">O1</td></tr>
     
     </tbody>

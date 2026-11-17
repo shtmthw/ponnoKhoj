@@ -27,8 +27,8 @@
         <a href="/admin">Admin</a>
         <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">Log out</button></form>
       
-      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
     </nav>
+    <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
   </div>
 </header>
 <main id="main">
@@ -52,12 +52,12 @@
     <tbody>
     
       <tr>
-        <td data-label="Shop"><a href="/shops/3"><strong>Rahim Store</strong></a>
+        <td class="full" data-label="Shop"><a href="/shops/3"><strong>Rahim Store</strong></a>
           <div class="description"><span class="muted">No description given.</span></div>
           <span class="small muted">12 Station Road · Kotwali</span><br>
           <span class="tiny muted">submitted 106751 d ago · <a href="https://www.openstreetmap.org/?mlat=0&amp;mlon=0#map=17/0/0" rel="noopener noreferrer" target="_blank">See the pin on the map</a></span></td>
-        <td data-label="Submitted by"><br><span class="small muted">rahim@example.com</span></td>
-        <td class="actions">
+        <td class="full" data-label="Submitted by"><br><span class="small muted">rahim@example.com</span></td>
+        <td class="actions full">
           <form method="post" action="/admin/shops/3/status"><input type="hidden" name="status" value="verified"><button class="btn small" type="submit">Verify</button></form>
           <form method="post" action="/admin/shops/3/status"><input type="hidden" name="status" value="suspended"><button class="btn danger small" type="submit">Suspend</button></form>
         </td>
@@ -136,13 +136,13 @@
 
 <section class="card" aria-labelledby="sources-h">
   <h2 id="sources-h">Online sources</h2>
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">Source</th><th scope="col">Compliance</th><th scope="col">Status</th><th scope="col">Health</th></tr></thead>
     <tbody>
     
-      <tr><td>ponnoKhoj Demo Shop (fictional)<br><span class="small muted">demoshop</span></td><td>demo</td>
-      <td><span class="badge verified">Enabled</span></td>
-      <td class="small">Last success: 2026-11-10 11:00<br>Last error: timeout ×2</td></tr>
+      <tr><td class="lead">ponnoKhoj Demo Shop (fictional)<br><span class="small muted">demoshop</span></td><td data-label="Compliance">demo</td>
+      <td class="end"><span class="badge verified">Enabled</span></td>
+      <td class="small full">Last success: 2026-11-10 11:00<br>Last error: timeout ×2</td></tr>
     
     </tbody>
   </table></div>
@@ -151,6 +151,7 @@
 <section class="card" aria-labelledby="audit-h">
   <h2 id="audit-h">Recent activity (audit log)</h2>
   <p class="muted small">The 20 most recent actions, newest first.</p>
+  
   <div class="table-scroll"><table>
     <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
     <tbody>

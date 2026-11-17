@@ -25,8 +25,8 @@
       
         <a href="/vendor/login">দোকানদারদের জন্য</a>
       
-      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
     </nav>
+    <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
   </div>
 </header>
 <main id="main">
@@ -47,12 +47,10 @@
     
 
 <form class="card search-card" method="get" action="/search" role="search">
-  <details class="refine" open>
-    <summary>
-      <span>কী খুঁজছেন?
-        </span>
-    </summary>
-    <label for="q" class="sr-only">কী খুঁজছেন?</label>
+  
+  <div class="refine">
+    <label for="q" class="q-label">কী খুঁজছেন?</label>
+  
     <div class="query-row">
       <input id="q" type="search" name="q" value="" maxlength="200" required placeholder="যেমন: মিনিকেট চাল ৫ কেজি" autocomplete="off" enterkeyhint="search">
     </div>
@@ -122,12 +120,13 @@
       </select>
     </div>
     <div class="form-section"><button class="btn block big" type="submit">খুঁজুন</button></div>
-  </details>
+  </div>
 </form>
 
   </aside>
   
-  <section class="features" aria-label="যেভাবে কাজ করে">
+  <section class="features" aria-labelledby="how-h">
+    <h2 id="how-h">যেভাবে কাজ করে</h2>
     <div class="feature"><h3>স্থানীয় দোকান</h3><p>দোকানদাররা নিজেরাই দাম দেন — অনলাইন স্টোর লাগে না। পুরো জেলা, একটি উপজেলা বা আপনার চারপাশে খুঁজুন, তারপর দোকানে গিয়ে কিনুন।</p></div>
     <div class="feature"><h3>অনলাইন শপ</h3><p>অনলাইন শপের প্রকাশ্য পণ্য-পাতা থেকে নেওয়া দাম, কম দাম আগে, কেনার লিংকসহ। আপাতত ইলেকট্রনিক্স (স্টার টেক, টেক ল্যান্ড)।</p></div>
     <div class="feature"><h3>এআই মূল্য অনুমান</h3><p>কাছের কোনো দোকানে দাম না থাকলে শুধু বাস্তব তথ্য — দূরের দোকানের দাম, অনলাইনের দাম ও একই ধরনের পণ্য — থেকে একটি মূল্য-পরিসর পান। তথ্য না থাকলে আন্দাজ নয়।</p></div>

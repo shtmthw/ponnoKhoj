@@ -1,13 +1,17 @@
 {{define "content"}}
 <div class="wrap">
 {{$L := .L}}{{$d := .Data}}
-<h1>{{$d.Shop.Name}}</h1>
-<p><span class="badge {{$d.Shop.Status}}">{{$L.T (printf "status.%s" $d.Shop.Status)}}</span>
-  {{if eq $d.Shop.Status "pending"}}<span class="muted">{{$L.T "vendor.pending_note"}}</span>{{end}}</p>
-<div class="actions card">
-  <a class="btn secondary" href="/vendor/shops/{{$d.Shop.ID}}/edit">{{$L.T "vendor.edit_shop"}}</a>
-  <a class="btn secondary" href="/shops/{{$d.Shop.ID}}">{{$L.T "vendor.public_page"}}</a>
-  <a href="/vendor">{{$L.T "vendor.back"}}</a>
+<p class="back-link"><a href="/vendor">{{$L.T "vendor.back"}}</a></p>
+<div class="page-head">
+  <div>
+    <h1>{{$d.Shop.Name}}</h1>
+    <p><span class="badge {{$d.Shop.Status}}">{{$L.T (printf "status.%s" $d.Shop.Status)}}</span>
+      {{if eq $d.Shop.Status "pending"}}<span class="muted">{{$L.T "vendor.pending_note"}}</span>{{end}}</p>
+  </div>
+  <div class="actions page-actions">
+    <a class="btn secondary" href="/vendor/shops/{{$d.Shop.ID}}/edit">{{$L.T "vendor.edit_shop"}}</a>
+    <a class="btn secondary" href="/shops/{{$d.Shop.ID}}">{{$L.T "vendor.public_page"}}</a>
+  </div>
 </div>
 
 {{if $d.Bulk}}
@@ -28,9 +32,11 @@
   <h2 id="add-h">{{$L.T "listing.add"}}</h2>
   <form method="get" action="/vendor/shops/{{$d.Shop.ID}}" class="stack">
     <label for="pq">{{$L.T "listing.find_product"}}</label>
-    <input id="pq" type="search" name="pq" value="{{$d.ProductQuery}}" maxlength="200" autocomplete="off"
-      hx-get="/vendor/shops/{{$d.Shop.ID}}/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
-    <div><button class="btn secondary small" type="submit">{{$L.T "search.submit"}}</button></div>
+    <div class="query-row">
+      <input id="pq" type="search" name="pq" value="{{$d.ProductQuery}}" maxlength="200" autocomplete="off" enterkeyhint="search"
+        hx-get="/vendor/shops/{{$d.Shop.ID}}/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+      <button class="btn secondary" type="submit">{{$L.T "search.submit"}}</button>
+    </div>
   </form>
   {{template "product_options" .}}
   <p class="small">{{$L.T "listing.missing"}} <a href="/vendor/products/new?shop={{$d.Shop.ID}}">{{$L.T "vendor.propose_product"}}</a></p>
@@ -39,26 +45,26 @@
 <section class="card" aria-labelledby="listings-h">
   <h2 id="listings-h">{{$L.T "listing.yours"}}</h2>
   {{if $d.Listings}}
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col">{{$L.T "table.price"}}</th><th scope="col">{{$L.T "table.updated"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
     <tbody>
     {{range $d.Listings}}
       <tr>
-        <td>{{$L.Name .NameEn .NameBn}} <span class="small muted">#{{.ProductID}}</span>
+        <td class="lead full">{{$L.Name .NameEn .NameBn}} <span class="small muted">#{{.ProductID}}</span>
           {{if eq .ProductStatus "proposed"}}<span class="badge pending">{{$L.T "status.proposed"}}</span>{{end}}
           {{if .UnderReview}}<span class="badge review">{{$L.T "badge.under_review"}}</span>{{end}}
           {{if .AutoHidden}}<span class="badge hidden">{{$L.T "status.auto_hidden"}}</span>{{end}}</td>
-        <td>
+        <td class="full">
           <form class="actions" method="post" action="/vendor/shops/{{$d.Shop.ID}}/listings">
             <input type="hidden" name="product" value="{{.ProductID}}">
             <label class="sr-only" for="price-{{.ID}}">{{$L.T "table.price"}}</label>
             <input id="price-{{.ID}}" type="text" inputmode="decimal" name="price" value="{{.Price.Decimal}}" required class="narrow">
             <label class="small"><input type="checkbox" name="in_stock" value="1"{{if .InStock}} checked{{end}}> {{$L.T "listing.in_stock"}}</label>
-            <button class="btn small" type="submit">{{$L.T "form.save"}}</button>
+            <button class="btn small secondary" type="submit">{{$L.T "form.save"}}</button>
           </form>
         </td>
-        <td>{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
-        <td><form method="post" action="/vendor/listings/{{.ID}}/delete"><input type="hidden" name="shop" value="{{$d.Shop.ID}}"><button class="btn danger small" type="submit">{{$L.T "form.delete"}}</button></form></td>
+        <td class="grow" data-label="{{$L.T "table.updated"}}">{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
+        <td class="trail"><form method="post" action="/vendor/listings/{{.ID}}/delete"><input type="hidden" name="shop" value="{{$d.Shop.ID}}"><button class="btn danger small" type="submit">{{$L.T "form.delete"}}</button></form></td>
       </tr>
     {{end}}
     </tbody>

@@ -13,17 +13,17 @@
 <section class="card" aria-labelledby="prices-h">
   <h2 id="prices-h">{{$L.T "shop.prices"}}</h2>
   {{if $d.Listings}}
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">{{$L.T "table.product"}}</th><th scope="col" class="num">{{$L.T "table.price"}}</th><th scope="col">{{$L.T "table.updated"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
     <tbody>
     {{range $d.Listings}}
       <tr>
-        <td><a href="/search?product={{.ProductID}}&amp;mode=all">{{$L.Name .NameEn .NameBn}}</a>
+        <td class="lead"><a href="/search?product={{.ProductID}}&amp;mode=all">{{$L.Name .NameEn .NameBn}}</a>
           {{if not .InStock}}<span class="badge out">{{$L.T "badge.out_of_stock"}}</span>{{end}}
           {{if .UnderReview}}<span class="badge review">{{$L.T "badge.under_review"}}</span>{{end}}</td>
-        <td class="num"><strong>{{$L.Money .Price}}</strong></td>
-        <td>{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
-        <td>
+        <td class="num end"><strong>{{$L.Money .Price}}</strong></td>
+        <td class="grow" data-label="{{$L.T "table.updated"}}">{{$L.Ago .UpdatedAt}} <span class="badge {{.Freshness}}">{{$L.T (printf "freshness.%s" .Freshness)}}</span></td>
+        <td class="trail">
           <details><summary class="small">{{$L.T "report.listing"}}</summary>
             {{template "reportform" (dict "L" $L "Target" "listing" "ID" .ID "ShopID" $d.Shop.ID)}}
           </details>

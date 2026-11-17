@@ -17,12 +17,12 @@
     <tbody>
     {{range $d.PendingShops}}
       <tr>
-        <td data-label="{{$L.T "table.shop"}}"><a href="/shops/{{.ID}}"><strong>{{.Name}}</strong></a>
+        <td class="full" data-label="{{$L.T "table.shop"}}"><a href="/shops/{{.ID}}"><strong>{{.Name}}</strong></a>
           <div class="description">{{if .Description}}{{.Description}}{{else}}<span class="muted">{{$L.T "admin.no_description"}}</span>{{end}}</div>
           <span class="small muted">{{.Address}} · {{$L.Name .AreaEn .AreaBn}}{{if .ParentAreaEn}}, {{$L.Name .ParentAreaEn .ParentAreaBn}}{{end}}{{if .Phone}} · {{.Phone}}{{end}}{{if .OpeningHours}} · {{.OpeningHours}}{{end}}</span><br>
           <span class="tiny muted">{{$L.T "admin.submitted"}} {{$L.Ago .CreatedAt}} · <a href="https://www.openstreetmap.org/?mlat={{.Lat}}&amp;mlon={{.Lng}}#map=17/{{.Lat}}/{{.Lng}}" rel="noopener noreferrer" target="_blank">{{$L.T "admin.see_pin"}}</a></span></td>
-        <td data-label="{{$L.T "admin.owner"}}">{{.OwnerName}}<br><span class="small muted">{{.OwnerEmail}}</span></td>
-        <td class="actions">
+        <td class="full" data-label="{{$L.T "admin.owner"}}">{{.OwnerName}}<br><span class="small muted">{{.OwnerEmail}}</span></td>
+        <td class="actions full">
           <form method="post" action="/admin/shops/{{.ID}}/status"><input type="hidden" name="status" value="verified"><button class="btn small" type="submit">{{$L.T "admin.verify"}}</button></form>
           <form method="post" action="/admin/shops/{{.ID}}/status"><input type="hidden" name="status" value="suspended"><button class="btn danger small" type="submit">{{$L.T "admin.suspend"}}</button></form>
         </td>
@@ -101,13 +101,13 @@
 
 <section class="card" aria-labelledby="sources-h">
   <h2 id="sources-h">{{$L.T "admin.sources"}}</h2>
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">{{$L.T "admin.source"}}</th><th scope="col">{{$L.T "admin.compliance"}}</th><th scope="col">{{$L.T "table.status"}}</th><th scope="col">{{$L.T "admin.health"}}</th></tr></thead>
     <tbody>
     {{range $d.Sources}}
-      <tr><td>{{.Name}}<br><span class="small muted">{{.ID}}</span></td><td>{{.ComplianceStatus}}</td>
-      <td>{{if .Enabled}}<span class="badge verified">{{$L.T "admin.enabled"}}</span>{{else}}<span class="badge suspended">{{$L.T "admin.disabled"}}</span>{{end}}</td>
-      <td class="small">{{if .LastSuccessAt}}{{$L.T "admin.last_ok"}} {{$L.Date (dereft .LastSuccessAt)}}{{end}}{{if .LastError}}<br>{{$L.T "admin.last_error"}} {{.LastError}} ×{{$L.Num .ConsecutiveFailures}}{{end}}</td></tr>
+      <tr><td class="lead">{{.Name}}<br><span class="small muted">{{.ID}}</span></td><td data-label="{{$L.T "admin.compliance"}}">{{.ComplianceStatus}}</td>
+      <td class="end">{{if .Enabled}}<span class="badge verified">{{$L.T "admin.enabled"}}</span>{{else}}<span class="badge suspended">{{$L.T "admin.disabled"}}</span>{{end}}</td>
+      <td class="small full">{{if .LastSuccessAt}}{{$L.T "admin.last_ok"}} {{$L.Date (dereft .LastSuccessAt)}}{{end}}{{if .LastError}}<br>{{$L.T "admin.last_error"}} {{.LastError}} ×{{$L.Num .ConsecutiveFailures}}{{end}}</td></tr>
     {{end}}
     </tbody>
   </table></div>
@@ -116,12 +116,13 @@
 <section class="card" aria-labelledby="audit-h">
   <h2 id="audit-h">{{$L.T "admin.audit"}}</h2>
   <p class="muted small">{{$L.T "admin.audit_note"}}</p>
+  {{if not $d.Audit}}<p class="muted">{{$L.T "admin.audit_empty"}}</p>{{else}}
   <div class="table-scroll"><table>
     <thead><tr><th scope="col">{{$L.T "admin.when"}}</th><th scope="col">{{$L.T "admin.who"}}</th><th scope="col">{{$L.T "admin.action"}}</th><th scope="col">{{$L.T "admin.target"}}</th></tr></thead>
     <tbody>
     {{range $d.Audit}}<tr><td class="small">{{$L.Date .CreatedAt}}</td><td class="small">{{if .ActorEmail}}{{.ActorEmail}}{{else}}system{{end}}</td><td>{{.Action}}</td><td>{{.EntityType}} #{{.EntityID}}</td></tr>{{end}}
     </tbody>
-  </table></div>
+  </table></div>{{end}}
 </section>
 </div>
 {{end}}

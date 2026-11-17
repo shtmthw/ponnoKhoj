@@ -73,7 +73,7 @@ func TestEveryMessageKeyUsedExists(t *testing.T) {
 	for _, k := range c.Keys(LangEn) {
 		have[k] = true
 	}
-	literal := regexp.MustCompile(`\.T\(?\s*"([a-z_.0-9]+)"`)
+	literal := regexp.MustCompile(`\.(?:T|Count)\(?\s*"([a-z_.0-9]+)"`)
 	prefix := regexp.MustCompile(`printf "([a-z_.]+)\.%s"`)
 	goKey := regexp.MustCompile(`"((?:flash|verr|error|mode|bulk|auth\.err)\.[a-z_.]+)"`)
 	check := func(file, src string) {
@@ -556,6 +556,7 @@ func searchFixture() SearchVM {
 			}},
 		},
 	}
+	vm.Online = onlineVM(vm.Resp.Online, 1, 0, vm.SelfURL)
 	vm.Estimate = &EstimateVM{
 		State: "ready", ProductID: 1, PlaceFields: placeFields(form), Place: point, RadiusM: 3000, RadiusF: 3000, Back: vm.SelfURL, PollURL: "/estimate?product=1",
 		View: estimate.View{
@@ -614,6 +615,7 @@ func TestGoldenHomeAndEmptyStates(t *testing.T) {
 	none := searchFixture()
 	none.Resp.Local = &pricefinder.LocalResult{NeedsLocation: true, RadiusM: 3000}
 	none.Resp.Online = &pricefinder.OnlineResult{SourcesEnabled: 0}
+	none.Online = onlineVM(none.Resp.Online, 1, 0, none.SelfURL)
 	none.Estimate = &EstimateVM{State: pricefinder.EstimateNeedsLocation, ProductID: 1, RadiusM: 3000, RadiusF: 3000}
 	none.Scope = nil
 	out := string(renderGolden(t, "search.html", LangEn, "x", none))
@@ -686,6 +688,54 @@ func TestEstimatePanelStates(t *testing.T) {
 	out = render(&ready)
 	if !strings.Contains(out, "Method: statistical") || !strings.Contains(out, "The AI refinement was not usable") || strings.Contains(out, "llm timeout") {
 		t.Errorf("fallback panel wrong: %s", out)
+	}
+}
+
+// The online panel polls while a refresh is pending, stops once the fresh
+// prices are in, and gives up politely when the poll budget runs out.
+func TestOnlinePanelPolling(t *testing.T) {
+	t.Parallel()
+	pages, err := ParseTemplates()
+	if err != nil {
+		t.Fatal(err)
+	}
+	l := testCatalog(t).For(LangEn)
+	l.now = func() time.Time { return fixedNow }
+	render := func(vm *OnlineVM) string {
+		var buf bytes.Buffer
+		if err := pages["search.html"].ExecuteTemplate(&buf, "online", map[string]any{"L": l, "Data": vm}); err != nil {
+			t.Fatal(err)
+		}
+		return buf.String()
+	}
+	back := "/search?mode=all&q=rice"
+	offer := pricefinder.Offer{ID: 1, SourceName: "Shop", URL: "https://example.com/p", Title: "Rice", Price: 40000, InStock: true, ObservedAt: fixedNow}
+	pending := &pricefinder.OnlineResult{SourcesEnabled: 1, Covered: true, Refreshing: true}
+	done := &pricefinder.OnlineResult{SourcesEnabled: 1, Covered: true, Offers: []pricefinder.Offer{offer}}
+
+	vm := onlineVM(pending, 7, 0, back)
+	if vm.PollURL != "/online?back=%2Fsearch%3Fmode%3Dall%26q%3Drice&n=1&product=7" || vm.Slow {
+		t.Errorf("first poll URL = %q, slow = %v", vm.PollURL, vm.Slow)
+	}
+	out := render(vm)
+	if !strings.Contains(out, `id="online"`) || !strings.Contains(out, `hx-trigger="every 3s"`) || !strings.Contains(out, `hx-swap="outerHTML"`) ||
+		!strings.Contains(out, "Checking online shops") || strings.Contains(out, "No online offers found") {
+		t.Errorf("pending panel does not poll: %s", out)
+	}
+	if next := onlineVM(pending, 7, 3, back); !strings.Contains(next.PollURL, "n=4") {
+		t.Errorf("poll count does not advance: %q", next.PollURL)
+	}
+
+	out = render(onlineVM(done, 7, 5, back))
+	if strings.Contains(out, "hx-get") || strings.Contains(out, "spinner") || !strings.Contains(out, "Rice") {
+		t.Errorf("finished panel still polls or lacks the offer: %s", out)
+	}
+
+	slow := onlineVM(pending, 7, onlinePollLimit, back)
+	out = render(slow)
+	if !slow.Slow || slow.PollURL != "" || strings.Contains(out, "hx-get") || strings.Contains(out, "spinner") ||
+		!strings.Contains(out, "slow to answer") || !strings.Contains(out, `href="/search?mode=all&amp;q=rice"`) {
+		t.Errorf("exhausted panel wrong: %+v %s", slow, out)
 	}
 }
 

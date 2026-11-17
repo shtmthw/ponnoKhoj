@@ -3,24 +3,24 @@
 {{$L := .L}}{{$d := .Data}}
 <div class="page-head">
   <div><h1>{{$L.T "vendor.dashboard"}}</h1><p class="muted small">{{$L.T "vendor.signed_in_as" .User.Email}}</p></div>
-  <div class="actions">
+  <div class="actions page-actions">
     <a class="btn" href="/vendor/shops/new">{{$L.T "vendor.add_shop"}}</a>
-    <a class="btn" href="/vendor/products/new">{{$L.T "vendor.propose_product"}}</a>
-    <a class="btn" href="/vendor/catalog.csv">{{$L.T "vendor.download_catalog"}}</a>
+    <a class="btn secondary" href="/vendor/products/new">{{$L.T "vendor.propose_product"}}</a>
+    <a class="btn secondary" href="/vendor/catalog.csv">{{$L.T "vendor.download_catalog"}}</a>
   </div>
 </div>
 <section class="card" aria-labelledby="shops-h">
   <h2 id="shops-h">{{$L.T "vendor.your_shops"}}</h2>
   {{if $d.Shops}}
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">{{$L.T "table.shop"}}</th><th scope="col">{{$L.T "table.status"}}</th><th scope="col" class="num">{{$L.T "table.listings"}}</th><th scope="col"><span class="sr-only">{{$L.T "table.actions"}}</span></th></tr></thead>
     <tbody>
     {{range $d.Shops}}
       <tr>
-        <td><strong>{{.Name}}</strong><br><span class="small muted">{{.Address}} · {{$L.Name .AreaEn .AreaBn}}</span></td>
+        <td class="lead"><strong>{{.Name}}</strong><br><span class="small muted">{{.Address}} · {{$L.Name .AreaEn .AreaBn}}</span></td>
         <td><span class="badge {{.Status}}">{{$L.T (printf "status.%s" .Status)}}</span>{{if .AutoHidden}} <span class="badge hidden">{{$L.T "status.auto_hidden"}}</span>{{end}}</td>
-        <td class="num">{{$L.Num .ListingCount}}</td>
-        <td><a class="btn small" href="/vendor/shops/{{.ID}}">{{$L.T "vendor.manage"}}</a></td>
+        <td class="num" data-label="{{$L.T "table.listings"}}">{{$L.Num .ListingCount}}</td>
+        <td class="end"><a class="btn small secondary" href="/vendor/shops/{{.ID}}">{{$L.T "vendor.manage"}}</a></td>
       </tr>
     {{end}}
     </tbody>

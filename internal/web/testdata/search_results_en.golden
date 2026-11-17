@@ -25,8 +25,8 @@
       
         <a href="/vendor/login">For shop owners</a>
       
-      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
     </nav>
+    <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
   </div>
 </header>
 <main id="main">
@@ -40,12 +40,14 @@
     
 
 <form class="card search-card" method="get" action="/search" role="search">
+  
   <details class="refine" data-open-desktop>
     <summary>
       <span>Change search
         <span class="refine-summary">“miniket rice 5kg” · your location</span></span>
     </summary>
     <label for="q" class="sr-only">What are you looking for?</label>
+  
     <div class="query-row">
       <input id="q" type="search" name="q" value="miniket rice 5kg" maxlength="200" required placeholder="e.g. miniket rice 5 kg" autocomplete="off" enterkeyhint="search">
     </div>
@@ -210,39 +212,43 @@
       
 
       
-      <section class="card" aria-labelledby="online-h">
-        <div class="card-head">
-          <h2 id="online-h">Online prices</h2>
-          <span class="muted small">1 offers</span>
-        </div>
-        
-          <p class="small muted"><span class="spinner" aria-hidden="true"></span> Checking online shops for newer prices… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">Refresh</a></p>
-          <div class="notice"><p>1 online source(s) could not be reached on the last check; their prices may be missing.</p></div>
-          
-            <ol class="results">
-            
-              <li class="result best">
-                <div>
-                  <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
-                  <div class="where"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">Demo</span></div>
-                  <div class="meta">
-                    <span class="badge in">In stock</span>
-                    <span>price seen 3 h ago</span>
-                  </div>
-                </div>
-                <div class="side">
-                  <span class="best-tag">Lowest price</span>
-                  <span class="price">৳438</span>
-                  <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Visit shop</a>
-                </div>
-              </li>
-            
-            </ol>
-            <p class="tiny muted">Prices are read from each shop&#39;s product page and may have changed since. Confirm on the shop&#39;s site before buying.</p>
-          
-        
-      </section>
+
+<section id="online" class="card" aria-labelledby="online-h" aria-live="polite"
+  hx-get="/online?back=%2Fsearch%3Flat%3D22.335109%26lng%3D91.834073%26mode%3Dall%26q%3Dminiket%2Brice%2B5kg%26radius%3D3000%26where%3Dpoint&amp;n=1&amp;product=1" hx-trigger="every 3s" hx-swap="outerHTML">
+  <div class="card-head">
+    <h2 id="online-h">Online prices</h2>
+    <span class="muted small">1 offer</span>
+  </div>
+  
+    <p class="small muted"><span class="spinner" aria-hidden="true"></span> Checking online shops for newer prices… <a href="/search?lat=22.335109&amp;lng=91.834073&amp;mode=all&amp;q=miniket&#43;rice&#43;5kg&amp;radius=3000&amp;where=point">Refresh</a></p>
+    
+    <div class="notice"><p>1 online source(s) could not be reached on the last check; their prices may be missing.</p></div>
+    
+      <ol class="results">
       
+        <li class="result best">
+          <div>
+            <h3><a href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Miniket Rice 5kg (মিনিকেট চাল)</a></h3>
+            <div class="where source"><span class="source-logo" aria-hidden="true">P</span> ponnoKhoj Demo Shop (fictional) <span class="badge demo">Demo</span></div>
+            <div class="meta">
+              <span class="badge in">In stock</span>
+              <span>price seen 3 h ago</span>
+            </div>
+          </div>
+          <div class="side">
+            <span class="best-tag">Lowest price</span>
+            <span class="price">৳438</span>
+            <a class="btn small secondary" href="http://localhost:8080/demo-shop/p/miniket-rice-5kg" rel="noopener noreferrer nofollow" target="_blank">Visit shop</a>
+          </div>
+        </li>
+      
+      </ol>
+      <p class="tiny muted">Prices are read from each shop&#39;s product page and may have changed since. Confirm on the shop&#39;s site before buying.</p>
+    
+  
+</section>
+
+
 
       
 
@@ -257,8 +263,8 @@
     <p class="range">৳389 – ৳428</p>
     <div class="range-bar" aria-hidden="true"><span data-pos="41"></span></div>
     <div class="range-ends" aria-hidden="true"><span>low</span><span>high</span></div>
-    <p>Most likely around <strong>৳405</strong>
-      · Confidence: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">Medium</span></p>
+    <p class="likely"><span>Most likely around <strong>৳405</strong></span>
+      <span class="confidence">Confidence: <span class="meter medium" aria-hidden="true"><i></i><i></i><i></i></span> <span class="badge medium">Medium</span></span></p>
     <div class="explain">Four nearby shops agree closely. &lt;script&gt;alert(1)&lt;/script&gt;</div>
     <p class="small muted">Method: AI-assisted (demo-model)
       · search radius 3.0 km · computed 1 h ago</p>
@@ -272,10 +278,10 @@
     <thead><tr><th scope="col">Source</th><th scope="col" class="num">Comparable price</th><th scope="col" class="num">Distance</th><th scope="col" class="num">Age</th><th scope="col">ID</th></tr></thead>
     <tbody>
     
-      <tr><td data-label="Source">Local shop, same product</td><td class="num" data-label="Comparable price">৳405</td>
+      <tr><td class="lead">Local shop, same product</td><td class="num end"><strong>৳405</strong></td>
       <td class="num" data-label="Distance">880 m</td><td class="num" data-label="Age">1 d</td><td class="tiny muted" data-label="ID">L11</td></tr>
     
-      <tr><td data-label="Source">Online offer</td><td class="num" data-label="Comparable price">৳416.10</td>
+      <tr><td class="lead">Online offer</td><td class="num end"><strong>৳416.10</strong></td>
       <td class="num" data-label="Distance">–</td><td class="num" data-label="Age">0 d</td><td class="tiny muted" data-label="ID">O1</td></tr>
     
     </tbody>

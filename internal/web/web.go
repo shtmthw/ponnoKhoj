@@ -181,6 +181,7 @@ func (s *Server) Register(rt *httpx.Router) {
 	rt.HandleFunc("GET /{$}", s.handleSearch, limitSearches(s.d.Limits.Search))
 	rt.HandleFunc("GET /search", s.handleSearch, limitSearches(s.d.Limits.Search))
 	rt.HandleFunc("GET /estimate", s.handleEstimatePoll, limit(s.d.Limits.Poll))
+	rt.HandleFunc("GET /online", s.handleOnlinePoll, limit(s.d.Limits.Poll))
 	rt.HandleFunc("GET /areas/upazilas", s.handleUpazilaOptions, limit(s.d.Limits.Poll))
 	rt.HandleFunc("POST /estimate", s.handleEstimateStart, limit(s.d.Limits.Estimate))
 	rt.HandleFunc("GET /shops/{id}", s.handleShop)

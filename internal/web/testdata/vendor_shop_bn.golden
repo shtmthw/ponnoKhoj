@@ -27,8 +27,8 @@
         <a href="/admin">অ্যাডমিন</a>
         <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">লগ আউট</button></form>
       
-      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
     </nav>
+    <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
   </div>
 </header>
 <main id="main">
@@ -36,13 +36,17 @@
   
 <div class="wrap">
 
-<h1>Rahim Store</h1>
-<p><span class="badge pending">যাচাইয়ের অপেক্ষায়</span>
-  <span class="muted">যাচাইয়ের অপেক্ষায়। দোকান যাচাই হলে আপনার দাম খোঁজায় দেখা যাবে।</span></p>
-<div class="actions card">
-  <a class="btn secondary" href="/vendor/shops/3/edit">দোকানের তথ্য সম্পাদনা</a>
-  <a class="btn secondary" href="/shops/3">পাবলিক পেজ দেখুন</a>
-  <a href="/vendor">আমার দোকানে ফিরুন</a>
+<p class="back-link"><a href="/vendor">আমার দোকানে ফিরুন</a></p>
+<div class="page-head">
+  <div>
+    <h1>Rahim Store</h1>
+    <p><span class="badge pending">যাচাইয়ের অপেক্ষায়</span>
+      <span class="muted">যাচাইয়ের অপেক্ষায়। দোকান যাচাই হলে আপনার দাম খোঁজায় দেখা যাবে।</span></p>
+  </div>
+  <div class="actions page-actions">
+    <a class="btn secondary" href="/vendor/shops/3/edit">দোকানের তথ্য সম্পাদনা</a>
+    <a class="btn secondary" href="/shops/3">পাবলিক পেজ দেখুন</a>
+  </div>
 </div>
 
 
@@ -63,9 +67,11 @@
   <h2 id="add-h">দাম যোগ বা হালনাগাদ করুন</h2>
   <form method="get" action="/vendor/shops/3" class="stack">
     <label for="pq">পণ্য খুঁজুন</label>
-    <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off"
-      hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
-    <div><button class="btn secondary small" type="submit">খুঁজুন</button></div>
+    <div class="query-row">
+      <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off" enterkeyhint="search"
+        hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+      <button class="btn secondary" type="submit">খুঁজুন</button>
+    </div>
   </form>
   
 
@@ -96,26 +102,26 @@
 <section class="card" aria-labelledby="listings-h">
   <h2 id="listings-h">আপনার দেওয়া দাম</h2>
   
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">পণ্য</th><th scope="col">দাম</th><th scope="col">হালনাগাদ</th><th scope="col"><span class="sr-only">কাজ</span></th></tr></thead>
     <tbody>
     
       <tr>
-        <td>মিনিকেট চাল ৫ কেজি <span class="small muted">#1</span>
+        <td class="lead full">মিনিকেট চাল ৫ কেজি <span class="small muted">#1</span>
           
           <span class="badge review">দাম যাচাইাধীন</span>
           </td>
-        <td>
+        <td class="full">
           <form class="actions" method="post" action="/vendor/shops/3/listings">
             <input type="hidden" name="product" value="1">
             <label class="sr-only" for="price-11">দাম</label>
             <input id="price-11" type="text" inputmode="decimal" name="price" value="405.00" required class="narrow">
             <label class="small"><input type="checkbox" name="in_stock" value="1" checked> স্টকে আছে</label>
-            <button class="btn small" type="submit">সংরক্ষণ করুন</button>
+            <button class="btn small secondary" type="submit">সংরক্ষণ করুন</button>
           </form>
         </td>
-        <td>২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
-        <td><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">মুছুন</button></form></td>
+        <td class="grow" data-label="হালনাগাদ">২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
+        <td class="trail"><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">মুছুন</button></form></td>
       </tr>
     
     </tbody>

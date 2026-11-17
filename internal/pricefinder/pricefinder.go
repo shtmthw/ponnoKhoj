@@ -416,6 +416,14 @@ func (s *Service) localArea(ctx context.Context, productID int64, place *Resolve
 	return res, nil
 }
 
+// Online is the online-mode answer for one product on its own. The search
+// page's online panel polls it while a refresh runs: Refreshing stays true
+// until the worker has recorded an attempt (re-queuing is a no-op while the
+// refresh is in flight), so the panel knows when to stop asking.
+func (s *Service) Online(ctx context.Context, productID int64) (*OnlineResult, error) {
+	return s.online(ctx, productID)
+}
+
 // online returns cached offers immediately and queues a refresh when the
 // cache is stale (stale-while-revalidate).
 func (s *Service) online(ctx context.Context, productID int64) (*OnlineResult, error) {

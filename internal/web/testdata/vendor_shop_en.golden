@@ -27,8 +27,8 @@
         <a href="/admin">Admin</a>
         <form class="inline" method="post" action="/vendor/logout"><button class="linklike" type="submit">Log out</button></form>
       
-      <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
     </nav>
+    <a class="lang" href="/lang?set=bn&amp;next=%2fsearch%3fq%3drice" hreflang="bn" lang="bn">বাংলা</a>
   </div>
 </header>
 <main id="main">
@@ -36,13 +36,17 @@
   
 <div class="wrap">
 
-<h1>Rahim Store</h1>
-<p><span class="badge pending">Pending review</span>
-  <span class="muted">Waiting for review. Your prices will appear in search once the shop is verified.</span></p>
-<div class="actions card">
-  <a class="btn secondary" href="/vendor/shops/3/edit">Edit shop details</a>
-  <a class="btn secondary" href="/shops/3">View public page</a>
-  <a href="/vendor">Back to my shops</a>
+<p class="back-link"><a href="/vendor">Back to my shops</a></p>
+<div class="page-head">
+  <div>
+    <h1>Rahim Store</h1>
+    <p><span class="badge pending">Pending review</span>
+      <span class="muted">Waiting for review. Your prices will appear in search once the shop is verified.</span></p>
+  </div>
+  <div class="actions page-actions">
+    <a class="btn secondary" href="/vendor/shops/3/edit">Edit shop details</a>
+    <a class="btn secondary" href="/shops/3">View public page</a>
+  </div>
 </div>
 
 
@@ -63,9 +67,11 @@
   <h2 id="add-h">Add or update a price</h2>
   <form method="get" action="/vendor/shops/3" class="stack">
     <label for="pq">Find the product</label>
-    <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off"
-      hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
-    <div><button class="btn secondary small" type="submit">Search</button></div>
+    <div class="query-row">
+      <input id="pq" type="search" name="pq" value="rice" maxlength="200" autocomplete="off" enterkeyhint="search"
+        hx-get="/vendor/shops/3/products" hx-trigger="input changed delay:300ms, search" hx-target="#product-options">
+      <button class="btn secondary" type="submit">Search</button>
+    </div>
   </form>
   
 
@@ -96,26 +102,26 @@
 <section class="card" aria-labelledby="listings-h">
   <h2 id="listings-h">Your prices</h2>
   
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Updated</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
     <tbody>
     
       <tr>
-        <td>Miniket Rice 5 kg <span class="small muted">#1</span>
+        <td class="lead full">Miniket Rice 5 kg <span class="small muted">#1</span>
           
           <span class="badge review">Price under review</span>
           </td>
-        <td>
+        <td class="full">
           <form class="actions" method="post" action="/vendor/shops/3/listings">
             <input type="hidden" name="product" value="1">
             <label class="sr-only" for="price-11">Price</label>
             <input id="price-11" type="text" inputmode="decimal" name="price" value="405.00" required class="narrow">
             <label class="small"><input type="checkbox" name="in_stock" value="1" checked> In stock</label>
-            <button class="btn small" type="submit">Save</button>
+            <button class="btn small secondary" type="submit">Save</button>
           </form>
         </td>
-        <td>2 h ago <span class="badge fresh">Fresh</span></td>
-        <td><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">Delete</button></form></td>
+        <td class="grow" data-label="Updated">2 h ago <span class="badge fresh">Fresh</span></td>
+        <td class="trail"><form method="post" action="/vendor/listings/11/delete"><input type="hidden" name="shop" value="3"><button class="btn danger small" type="submit">Delete</button></form></td>
       </tr>
     
     </tbody>

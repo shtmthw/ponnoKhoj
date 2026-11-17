@@ -25,8 +25,8 @@
       
         <a href="/vendor/login">দোকানদারদের জন্য</a>
       
-      <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
     </nav>
+    <a class="lang" href="/lang?set=en&amp;next=%2fsearch%3fq%3drice" hreflang="en" lang="en">English</a>
   </div>
 </header>
 <main id="main">
@@ -46,17 +46,17 @@
 <section class="card" aria-labelledby="prices-h">
   <h2 id="prices-h">এই দোকানের দাম</h2>
   
-  <div class="table-scroll"><table>
+  <div class="table-scroll"><table class="cards">
     <thead><tr><th scope="col">পণ্য</th><th scope="col" class="num">দাম</th><th scope="col">হালনাগাদ</th><th scope="col"><span class="sr-only">কাজ</span></th></tr></thead>
     <tbody>
     
       <tr>
-        <td><a href="/search?product=1&amp;mode=all">মিনিকেট চাল ৫ কেজি</a>
+        <td class="lead"><a href="/search?product=1&amp;mode=all">মিনিকেট চাল ৫ কেজি</a>
           
           </td>
-        <td class="num"><strong>৳৪০৫</strong></td>
-        <td>২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
-        <td>
+        <td class="num end"><strong>৳৪০৫</strong></td>
+        <td class="grow" data-label="হালনাগাদ">২ ঘণ্টা আগে <span class="badge fresh">নতুন</span></td>
+        <td class="trail">
           <details><summary class="small">এই দামের বিষয়ে অভিযোগ</summary>
             
 

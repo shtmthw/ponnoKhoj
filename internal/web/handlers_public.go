@@ -77,6 +77,38 @@ type EstimateVM struct {
 	Back        string
 }
 
+// onlinePollLimit caps how often the online panel re-asks while a refresh is
+// pending (one poll every 3 s, so about a minute), in case the worker is
+// down or a shop never answers.
+const onlinePollLimit = 20
+
+// OnlineVM is the online-prices panel's view model.
+type OnlineVM struct {
+	Res *pricefinder.OnlineResult
+	// PollURL is set while a refresh is pending and the poll budget lasts;
+	// HTMX re-fetches the panel from it until the fresh prices land.
+	PollURL string
+	// Slow is true when the budget ran out with the refresh still pending.
+	Slow bool
+	// Back is the full search page: the no-JavaScript way to check again.
+	Back string
+}
+
+func onlineVM(res *pricefinder.OnlineResult, productID int64, polls int, back string) *OnlineVM {
+	vm := &OnlineVM{Res: res, Back: back}
+	if !res.Refreshing {
+		return vm
+	}
+	if polls >= onlinePollLimit {
+		vm.Slow = true
+		return vm
+	}
+	vm.PollURL = "/online?" + url.Values{
+		"product": {strconv.FormatInt(productID, 10)}, "n": {strconv.Itoa(polls + 1)}, "back": {back},
+	}.Encode()
+	return vm
+}
+
 // SearchVM is the search page's view model.
 type SearchVM struct {
 	Form       SearchForm
@@ -99,6 +131,7 @@ type SearchVM struct {
 	Scope        *pricefinder.ResolvedPlace
 	RadiusF      float64
 	Markers      string
+	Online       *OnlineVM
 	Estimate     *EstimateVM
 	// AreaURLs offer a one-click switch between district-wide and
 	// upazila-only results.
@@ -324,6 +357,9 @@ func (s *Server) handleSearch(w http.ResponseWriter, r *http.Request) {
 				vm.NextURL = searchURL(form, map[string]string{"cursor": resp.Local.NextCursor})
 			}
 		}
+		if resp.Online != nil && resp.Selected != nil {
+			vm.Online = onlineVM(resp.Online, resp.Selected.ID, 0, vm.SelfURL)
+		}
 		if resp.Estimate != nil && resp.Selected != nil {
 			vm.Estimate = s.estimateVM(resp.Estimate, resp.Selected.ID, form, vm.SelfURL)
 			if vm.Scope == nil {
@@ -424,6 +460,38 @@ func (s *Server) handleEstimatePoll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.estimatePanel(w, r, productID, f, place, back, false)
+}
+
+// handleOnlinePoll returns the online-prices panel. A search that finds the
+// cached offers stale queues a refresh and renders the panel polling here,
+// so the fresh prices replace the spinner on their own. Without HTMX it
+// sends the browser back to the search page.
+func (s *Server) handleOnlinePoll(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	productID, err := strconv.ParseInt(q.Get("product"), 10, 64)
+	if err != nil || productID <= 0 {
+		s.renderError(w, r, http.StatusBadRequest, "error.bad_request")
+		return
+	}
+	back := safeNext(q.Get("back"), "/")
+	if r.Header.Get("HX-Request") == "" {
+		http.Redirect(w, r, back, http.StatusSeeOther) //nolint:gosec // G710: back passed safeNext (same-site paths only)
+		return
+	}
+	polls, _ := strconv.Atoi(q.Get("n"))
+	polls = min(max(polls, 1), onlinePollLimit)
+	if _, err := s.d.Finder.Product(r.Context(), productID); err != nil {
+		s.estimateError(w, r, err)
+		return
+	}
+	res, err := s.d.Finder.Online(r.Context(), productID)
+	if err != nil {
+		s.serverError(w, r, err)
+		return
+	}
+	data := map[string]any{"L": s.localizer(r), "Data": onlineVM(res, productID, polls, back)}
+	w.Header().Set("Cache-Control", "no-store")
+	s.renderNamed(w, r, http.StatusOK, "search.html", "online", data)
 }
 
 // handleEstimateStart is the explicit "estimate this" action.

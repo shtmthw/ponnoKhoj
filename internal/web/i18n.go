@@ -97,6 +97,19 @@ func (l *Localizer) T(key string, args ...any) string {
 	return fmt.Sprintf(msg, args...)
 }
 
+// Count translates a message about n things, with n in the language's
+// digits. English needs a singular ("1 shop"), so a key.one message, where
+// one exists, is used when n is 1; Bangla counts read the same for any n.
+func (l *Localizer) Count(key string, n any) string {
+	num := l.Num(n)
+	if num == "1" {
+		if _, ok := l.catalog.messages[l.Lang][key+".one"]; ok {
+			key += ".one"
+		}
+	}
+	return l.T(key, num)
+}
+
 // Num renders an integer with the language's digits.
 func (l *Localizer) Num(n any) string {
 	s := fmt.Sprint(n)
